@@ -10,7 +10,7 @@
     
     <title>
         
-            初识内存屏障 | 
+            TCP/IP笔记 | 
         
         Airy&#39;s Blog
     </title>
@@ -27,7 +27,7 @@
     <meta name="theme-color" content="#4169E1">
     <meta name="author" content="AiryMiku">
     <meta name="description" content="start from zero">
-    <meta name="keywords" content="不学习怎么能变强,Java">
+    <meta name="keywords" content="不学习怎么能变强,计算机网络">
 
     <!--iOS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -48,9 +48,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://airymiku.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="初识内存屏障 | Airy&#39;s Blog">
+    <meta property="og:title" content="TCP/IP笔记 | Airy&#39;s Blog">
     <meta property="og:description" content="start from zero">
-    <meta property="og:article:tag" content="Java"> 
+    <meta property="og:article:tag" content="计算机网络"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -234,7 +234,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#初识内存屏障"><span class="post-toc-number">1.</span> <span class="post-toc-text">初识内存屏障</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#衍生知识"><span class="post-toc-number">2.</span> <span class="post-toc-text">衍生知识</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#尾巴"><span class="post-toc-number">3.</span> <span class="post-toc-text">尾巴</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#先来个补充知识"><span class="post-toc-number">1.</span> <span class="post-toc-text">先来个补充知识</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#为啥有IP"><span class="post-toc-number">2.</span> <span class="post-toc-text">为啥有IP</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#这俩在什么层"><span class="post-toc-number">3.</span> <span class="post-toc-text">这俩在什么层</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP"><span class="post-toc-number">4.</span> <span class="post-toc-text">TCP</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#特点"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">特点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP段格式"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">TCP段格式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#首部-160bit"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">首部 160bit</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#控制位-为-1-的时候"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">控制位 为 1 的时候</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#其他字段"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">其他字段</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可靠传输的实现"><span class="post-toc-number">4.6.</span> <span class="post-toc-text">可靠传输的实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#流量控制"><span class="post-toc-number">4.7.</span> <span class="post-toc-text">流量控制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拥塞控制"><span class="post-toc-number">4.8.</span> <span class="post-toc-text">拥塞控制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#差错控制"><span class="post-toc-number">4.9.</span> <span class="post-toc-text">差错控制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP连接"><span class="post-toc-number">4.10.</span> <span class="post-toc-text">TCP连接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#阶段"><span class="post-toc-number">4.10.1.</span> <span class="post-toc-text">阶段</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#建立连接（三次握手）"><span class="post-toc-number">4.11.</span> <span class="post-toc-text">建立连接（三次握手）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连接释放（四次）"><span class="post-toc-number">4.12.</span> <span class="post-toc-text">连接释放（四次）</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#UDP"><span class="post-toc-number">5.</span> <span class="post-toc-text">UDP</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现功能"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">实现功能</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#特点-1"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">特点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#格式"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">格式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#伪首部"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">伪首部</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#补充"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">补充</span></a></li></ol></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -264,7 +264,7 @@
         
     
             <p class="article-headline-p">
-                初识内存屏障
+                TCP/IP笔记
             </p>
         </div>
 
@@ -283,7 +283,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>AiryMiku</strong>
-        <span>5月 26, 2018</span>
+        <span>7月 26, 2018</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -307,7 +307,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/Java/">Java</a>
+        <a class="post_tag-link" href="/tags/计算机网络/">计算机网络</a>
     </ul>
     
 
@@ -323,7 +323,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=TCP/IP笔记&url=https://airymiku.github.io//2018/07/26/TCP-IP笔记/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -332,7 +332,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&via=AiryMiku" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=TCP/IP笔记&url=https://airymiku.github.io//2018/07/26/TCP-IP笔记/index.html&via=AiryMiku" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -341,7 +341,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://airymiku.github.io//2018/07/26/TCP-IP笔记/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -350,7 +350,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://airymiku.github.io//2018/07/26/TCP-IP笔记/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -374,61 +374,201 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="初识内存屏障"><a href="#初识内存屏障" class="headerlink" title="初识内存屏障"></a>初识内存屏障</h1><p>内存屏障的概念来自硬件层，硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即读屏障和写屏障。</p>
-<ul>
-<li>内存屏障有两个作用：</li>
+        <p> 这次来分享一下我的TCP笔记吧，整理了一段时间</p>
+<h1 id="先来个补充知识"><a href="#先来个补充知识" class="headerlink" title="先来个补充知识"></a>先来个补充知识</h1><pre><code>1 字节 = 8bit（我就是经常忘记的人）
+</code></pre><h1 id="为啥有IP"><a href="#为啥有IP" class="headerlink" title="为啥有IP"></a>为啥有IP</h1><p> 协议建立在IP层之上，需要IP层进行传输数据</p>
+<h1 id="这俩在什么层"><a href="#这俩在什么层" class="headerlink" title="这俩在什么层"></a>这俩在什么层</h1><p> 运输层</p>
+<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li><p>面向链接</p>
+</li>
+<li><p>点对点</p>
+</li>
+<li><p>可靠交付</p>
+</li>
+<li><p>全双工</p>
+</li>
+<li><p>面向字节流</p>
+</li>
 </ul>
-<blockquote>
-<ol>
-<li>阻止屏障两侧的指令重排序；</li>
-<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</li>
-</ol>
-</blockquote>
-<ul>
-<li><p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；</p>
+<h2 id="TCP段格式"><a href="#TCP段格式" class="headerlink" title="TCP段格式"></a>TCP段格式</h2><h2 id="首部-160bit"><a href="#首部-160bit" class="headerlink" title="首部 160bit"></a>首部 160bit</h2><ul>
+<li><p>源端口 16bit</p>
 </li>
-<li><p>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
+<li><p>目的端口 16bit</p>
+</li>
+<li><p>序号 数据部分在发送方数据流的位置 32bit</p>
+</li>
+<li><p>确认号 指出接收方希望收到对方下次发送的数据流中的位置 32bit 发送数据部分的第一个字节的序号（确认号=N -&gt; N-1之前的数据confirm）</p>
+</li>
+<li><p>HLEN 首部长度  4bit 可变，可以确定首部和数据的分界</p>
+</li>
+<li><p>保留 6bit</p>
 </li>
 </ul>
-<p>我们把Load就是我们内存操作上的读，Store就是写</p>
-<p>Java的内存屏障有四种，实际上就是读和写的组合，来完成一系列的屏障和数据同步功能</p>
-<p>读-读屏障：</p>
-<pre><code>Load1;
-LoadLoad;
-Load2;
-</code></pre><p>保证Load1要在Load2及以后的操作之前先完成读取的操作</p>
-<p>写-写屏障：</p>
-<pre><code>Store1;
-StoreStore;
-Store2;
-</code></pre><p>保证Store1的写操作要在Store2及以后之前对其他处理器可见（线程）</p>
-<p>读-写屏障：</p>
-<pre><code>Load1;
-LoadStore;
-Store2;
-</code></pre><p>保证Load1要在Store2及以后之前先完成读取的操作-</p>
-<p>写-读屏障：</p>
-<pre><code>Store1;
-StoreLoad;
-Load2;
-</code></pre><p>保证Store1的写操作要在Load2及以后之前要对其他处理器可见（线程）</p>
-<h1 id="衍生知识"><a href="#衍生知识" class="headerlink" title="衍生知识"></a>衍生知识</h1><ol>
-<li><p>Volatile的内存屏障策略</p>
-<p> 特点：严格保守，悲观</p>
-<p> 在每个volatile写操作前插入写-写屏障，在写操作后插入写-读屏障；</p>
-<p> 在每个volatile读操作前插入读-读屏障，在读操作后插入读-写屏障；</p>
-<p> 有效防止Volatile变量及其后续指令的重排序、线程之间实现安全的通信，正式因为这样，被Volatile修饰过的变量便显现出了锁的特性</p>
+<h2 id="控制位-为-1-的时候"><a href="#控制位-为-1-的时候" class="headerlink" title="控制位 为 1 的时候"></a>控制位 为 1 的时候</h2><ul>
+<li><p>URG 紧急标志 尽快发送报文</p>
 </li>
-<li><p>Final的内存屏障</p>
-<p> 在新建对象过程中，后遭提对final的初始化写入和这个对赋值给其他引用变量不能重排序</p>
-<p> final域对象的赋值引用和调用final值不能重排序</p>
-<p> 必须保证final域写入后才能引用和读取</p>
-<p> 写final域之前会插入写-写屏障保障final域的可见而且防止重排序</p>
-<p> 读final域就是之前插入读-读屏障实现防止重排序</p>
-<p> x86处理器会对读-读、写-写忽略</p>
+<li><p>ACK 确认标志，确认字段有效</p>
 </li>
-</ol>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>Java的并发与内存屏障息息相关，内存屏障保障了并发的线程安全问题，弄懂底层实现能更好去理解Java的并发思想，所以才有了这篇文章，如有错漏，还望批评指导</p>
+<li><p>PSH 推送标志，发送方立即发送缓冲区中的数据</p>
+</li>
+<li><p>RST 复位标志 有严重差错，立即释放连接</p>
+</li>
+<li><p>SYN 同步标志 表示请求连接</p>
+</li>
+<li><p>FIN 终止标志 数据发送完毕，释放连接</p>
+</li>
+</ul>
+<h2 id="其他字段"><a href="#其他字段" class="headerlink" title="其他字段"></a>其他字段</h2><ul>
+<li><p>窗口大小 16bit（接收窗口）</p>
+</li>
+<li><p>校验和 16bit</p>
+</li>
+<li><p>紧急指针16 bit</p>
+</li>
+<li><p>选项和填充 &lt;= 40 字节 </p>
+</li>
+<li><p>MSS 最大报文长度，控制数据大小提高利用率，default val = 536</p>
+</li>
+<li><p>窗口扩大 【RFC 1323】</p>
+</li>
+<li><p>时间戳【RFC 1323】</p>
+</li>
+<li><p>选择确认 SACK【RFC 2018】</p>
+</li>
+<li><p>数据 必须是16bit的倍数</p>
+</li>
+<li><p>伪首部 12 bit</p>
+</li>
+<li><p>验证TCP数据段是否传送到了正确目标端</p>
+</li>
+<li><p>源IP地址 32bit</p>
+</li>
+<li><p>目标IP地址 32bit</p>
+</li>
+<li><p>全0 8bit</p>
+</li>
+<li><p>协议 8bit</p>
+</li>
+<li><p>TCP总长度 16bit</p>
+</li>
+</ul>
+<h2 id="可靠传输的实现"><a href="#可靠传输的实现" class="headerlink" title="可靠传输的实现"></a>可靠传输的实现</h2><ul>
+<li><p>滑动窗口 字节为单位</p>
+</li>
+<li><p>通知窗口 or 发送窗口</p>
+</li>
+<li><p>可用窗口 or 有效窗口 = 允许发送数据但是未得到确认</p>
+</li>
+<li><p>滑动已经发送但是未收到确认的窗口 可用窗口++ 一段时间未确认进入超时重传</p>
+</li>
+</ul>
+<h2 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h2><p>通过调整窗口大小，让接收方来得及接收</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>周而复始三种策略</p>
+<ul>
+<li><p>慢启动</p>
+</li>
+<li><p>拥塞避免</p>
+</li>
+<li><p>超时重传</p>
+</li>
+</ul>
+<h2 id="差错控制"><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h2><p>假设AB之间的链接</p>
+<p>RTT</p>
+<p>U（利用率）= Td（Td+RTT+Ta）</p>
+<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><h3 id="阶段"><a href="#阶段" class="headerlink" title="阶段"></a>阶段</h3><ul>
+<li><p>连接建立</p>
+</li>
+<li><p>数据传送</p>
+</li>
+<li><p>连接释放</p>
+</li>
+</ul>
+<h2 id="建立连接（三次握手）"><a href="#建立连接（三次握手）" class="headerlink" title="建立连接（三次握手）"></a>建立连接（三次握手）</h2><pre><code>客户端A                 客户端B
+</code></pre><ul>
+<li><p>主动打开——————————————被动打开</p>
+</li>
+<li><p>SYN-SENT——————————————LISTEN</p>
+</li>
+<li><p>—&gt; SYN = 1,seq = x 我要连接</p>
+</li>
+<li><p>SYN = 1,ACK = 1,seq = y,ack = x + 1 &lt;— 好，那就连接</p>
+</li>
+<li><p>ACK = 1,seq = x + 1,ack = y + 1 —&gt; 好，我收到你的“好，那就连接”</p>
+</li>
+<li><p>ESTABLISHED       &lt;–same as right</p>
+</li>
+<li><p>———-数据传输————</p>
+</li>
+</ul>
+<h2 id="连接释放（四次）"><a href="#连接释放（四次）" class="headerlink" title="连接释放（四次）"></a>连接释放（四次）</h2><pre><code>客户端A                  客户端B
+</code></pre><ul>
+<li><p>主动关闭——————————————被动关闭</p>
+</li>
+<li><p>———-数据传输————</p>
+</li>
+<li><p>ESTABLISHED       &lt;–same as right</p>
+</li>
+<li><p>FIN-WAIT-1 —&gt;FIN = 1,seq = u 分手吧</p>
+</li>
+<li><p>—–尽快传输剩下的数据—–</p>
+</li>
+<li><p>FIN-WAIT-2 ACK = 1,seq = v,ack = u + 1 &lt;— 此时通知应用进程 CLOSE-WAIT 可以，先把东西还给你</p>
+</li>
+<li><p>FIN = 1,ACK  = 1,seq = w,ack = u + 1 &lt;— 被动关闭 还完了</p>
+</li>
+<li><p>—》 ACK = 1，seq = u + 1(已经不传输数据，没必要+1),ack = w + 1 LAST-ACK 好，收到了你的东西</p>
+</li>
+<li><p>TIME-WAIT 此时A还需等待2MSL，防止新连接复用端口（下一次个连接不会出现上一次的报文段），还可以超时重传最后的FIN+ACK确认  让我再伤心一会，还不想着新的恋情</p>
+</li>
+</ul>
+<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><h2 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h2><ul>
+<li><p>复用分用</p>
+</li>
+<li><p>有限的差错检测</p>
+</li>
+</ul>
+<h2 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h2><ul>
+<li><p>无连接</p>
+</li>
+<li><p>最大努力交付</p>
+</li>
+<li><p>面向报文</p>
+</li>
+<li><p>无拥塞控制</p>
+</li>
+<li><p>一对多，一对一，多对多</p>
+</li>
+<li><p>首部开销小（对比TCP）8 vs 20字节</p>
+</li>
+<li><p>首部+数据一齐校验</p>
+</li>
+</ul>
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><ul>
+<li><p>源端口 16bit</p>
+</li>
+<li><p>目的端口 16bit</p>
+</li>
+<li><p>UDP总长度 16bit</p>
+</li>
+<li><p>校验和 16bit</p>
+</li>
+<li><p>数据 16bit倍数</p>
+</li>
+</ul>
+<h2 id="伪首部"><a href="#伪首部" class="headerlink" title="伪首部"></a>伪首部</h2><ul>
+<li><p>源IP地址 32bti</p>
+</li>
+<li><p>目的IP地址 32bit</p>
+</li>
+<li><p>全0 8 bit</p>
+</li>
+<li><p>协议 8bit</p>
+</li>
+<li><p>UDP总长度 16bit</p>
+</li>
+</ul>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>降低UDP丢包率：</p>
+<p>尽量使用大数据包</p>
 
     
 
@@ -449,7 +589,7 @@ Load2;
 <script>
     queue.offer(function() {
             var disqus_config = function () {
-                this.page.url = 'https://airymiku.github.io/2018/05/26/初识内存屏障/index.html';  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.url = 'https://airymiku.github.io/2018/07/26/TCP-IP笔记/index.html';  // Replace PAGE_URL with your page's canonical URL variable
                 this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
             };
 
@@ -480,21 +620,13 @@ Load2;
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2018/06/02/初探View之事件分发机制/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/2018/05/13/Android开发学习日记/" id="post_nav-older" class="next-content">
+        <a href="/2018/07/13/Java——SSM配置/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
