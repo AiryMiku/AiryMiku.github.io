@@ -10,7 +10,7 @@
     
     <title>
         
-            初识内存屏障 | 
+            归档 | 
         
         Airy&#39;s Blog
     </title>
@@ -27,7 +27,7 @@
     <meta name="theme-color" content="#4169E1">
     <meta name="author" content="AiryMiku">
     <meta name="description" content="start from zero">
-    <meta name="keywords" content="不学习怎么能变强,Java">
+    <meta name="keywords" content="不学习怎么能变强">
 
     <!--iOS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -48,9 +48,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://airymiku.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="初识内存屏障 | Airy&#39;s Blog">
+    <meta property="og:title" content="归档 | Airy&#39;s Blog">
     <meta property="og:description" content="start from zero">
-    <meta property="og:article:tag" content="Java"> 
+    
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -208,305 +208,98 @@
                         </button>
                     
 
-                    <!-- Post TOC -->
-
+                    <!-- Index Module -->
+<div class="material-index mdl-grid">
     
-    <!-- Back Button -->
-    <!--
-    <div class="material-back" id="backhome-div" tabindex="0">
-        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-           href="#" onclick="window.history.back();return false;"
-           target="_self"
-           role="button"
-           data-upgraded=",MaterialButton,MaterialRipple">
-            <i class="material-icons" role="presentation">arrow_back</i>
-            <span class="mdl-button__ripple-container">
-                <span class="mdl-ripple"></span>
-            </span>
-        </a>
-    </div>
-    -->
+    <div class="locate-thumbnail-symbol"></div>
 
-    <!-- Left aligned menu below button -->
-    <button id="post-toc-trigger-btn"
-        class="mdl-button mdl-js-button mdl-button--icon">
-        <i class="material-icons">format_list_numbered</i>
-    </button>
+    <!-- Pin on top -->
+    
 
-    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#初识内存屏障"><span class="post-toc-number">1.</span> <span class="post-toc-text">初识内存屏障</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#衍生知识"><span class="post-toc-number">2.</span> <span class="post-toc-text">衍生知识</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#尾巴"><span class="post-toc-number">3.</span> <span class="post-toc-text">尾巴</span></a></li></ol>
-
-        <!--
-        <li class="mdl-menu__item">
-            Some Action
-        </li>
-        -->
-    </ul>
-
-
-
-
-<!-- Layouts -->
-
-    <!-- Post Module -->
-    <div class="material-post_container">
-
-        <div class="material-post mdl-grid">
-            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-
-                <!-- Post Header(Thumbnail & Title) -->
-                
-    <!-- Paradox Post Header -->
+    <!-- Normal Post -->
+    
+        
+        
+            <!-- Paradox Thumbnail -->
+            <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
+    <!-- Post Thumbnail -->
     
         
             <!-- Pure Thumbnail -->
-            <div class="post_thumbnail-pure mdl-card__media mdl-color-text--grey-50" style="background-color:#4169E1 !important">
+            <div class="post-thumbnail-pure mdl-card__media mdl-color-text--grey-50" style="background-color:#4169E1 !important">
         
     
-            <p class="article-headline-p">
-                初识内存屏障
-            </p>
+
+        <!-- Post Title -->
+        <p class="article-headline-p"><a href="/2017/03/09/hello-world/">Hello World</a></p>
+    </div>
+
+    <!-- Post Excerpt -->
+    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
+        
+            Welcome to Hexo
+        
+        &nbsp;&nbsp;&nbsp;
+        <span>
+            <a href="/2017/03/09/hello-world/" target="_self">继续阅读</a>
+        </span>
+    </div>
+    <!-- Post_entry Info-->
+    <div id="post_entry-info">
+        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
+            <!-- Author Avatar -->
+            <div id="author-avatar">
+                <img src="/img/avatar.png" width="44px" height="44px" alt="AiryMiku's avatar">
+            </div>
+            <div>
+                <strong>AiryMiku</strong>
+                <span>3月 09, 2017</span>
+            </div>
         </div>
-
-
-
-
-
+        <div id="post_entry-right-info">
+            <!-- Category -->
+            <span class="post_entry-category">
                 
-                    <!-- Paradox Post Info -->
-                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+            </span>
 
-    <!-- Author Avatar -->
-    <div id="author-avatar">
-        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+            
+
+            <!-- Post Views -->
+            <span class="post_entry-views">
+            </span>
+        </div>
     </div>
-    <!-- Author Name & Date -->
-    <div>
-        <strong>AiryMiku</strong>
-        <span>5月 26, 2018</span>
-    </div>
-
-    <div class="section-spacer"></div>
-
-    <!-- Favorite -->
-    <!--
-        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
-            <i class="material-icons" role="presentation">favorite</i>
-            <span class="visuallyhidden">favorites</span>
-        </button>
-    -->
-
-    <!-- Qrcode -->
-    
-
-    <!-- Tags (bookmark) -->
-    
-    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-        <i class="material-icons" role="presentation">bookmark</i>
-        <span class="visuallyhidden">bookmark</span>
-    </button>
-    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
-        <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/Java/">Java</a>
-    </ul>
-    
-
-    <!-- Share -->
-    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-    <i class="material-icons" role="presentation">share</i>
-    <span class="visuallyhidden">share</span>
-</button>
-<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
-    
-
-    
-
-    <!-- Share Weibo -->
-    
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&pic=&searchPic=false&style=simple" target="_blank">
-            <li class="mdl-menu__item">
-                分享到微博
-            </li>
-        </a>
-    
-
-    <!-- Share Twitter -->
-    
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&via=AiryMiku" target="_blank">
-            <li class="mdl-menu__item">
-                分享到 Twitter
-            </li>
-        </a>
-    
-
-    <!-- Share Facebook -->
-    
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
-            <li class="mdl-menu__item">
-                分享到 Facebook
-            </li>
-        </a>
-    
-
-    <!-- Share Google+ -->
-    
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
-            <li class="mdl-menu__item">
-                分享到 Google+
-            </li>
-        </a>
-    
-
-    <!-- Share LinkedIn -->
-    
-
-    <!-- Share QQ -->
-    
-
-    <!-- Share Telegram -->
-    
-</ul>
-
 </div>
 
-                
-
-                <!-- Post Content -->
-                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
-    
-        <h1 id="初识内存屏障"><a href="#初识内存屏障" class="headerlink" title="初识内存屏障"></a>初识内存屏障</h1><p>内存屏障的概念来自硬件层，硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即读屏障和写屏障。</p>
-<ul>
-<li>内存屏障有两个作用：</li>
-</ul>
-<blockquote>
-<ol>
-<li>阻止屏障两侧的指令重排序；</li>
-<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</li>
-</ol>
-</blockquote>
-<ul>
-<li><p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；</p>
-</li>
-<li><p>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-</li>
-</ul>
-<p>我们把Load就是我们内存操作上的读，Store就是写</p>
-<p>Java的内存屏障有四种，实际上就是读和写的组合，来完成一系列的屏障和数据同步功能</p>
-<p>读-读屏障：</p>
-<pre><code>Load1;
-LoadLoad;
-Load2;
-</code></pre><p>保证Load1要在Load2及以后的操作之前先完成读取的操作</p>
-<p>写-写屏障：</p>
-<pre><code>Store1;
-StoreStore;
-Store2;
-</code></pre><p>保证Store1的写操作要在Store2及以后之前对其他处理器可见（线程）</p>
-<p>读-写屏障：</p>
-<pre><code>Load1;
-LoadStore;
-Store2;
-</code></pre><p>保证Load1要在Store2及以后之前先完成读取的操作-</p>
-<p>写-读屏障：</p>
-<pre><code>Store1;
-StoreLoad;
-Load2;
-</code></pre><p>保证Store1的写操作要在Load2及以后之前要对其他处理器可见（线程）</p>
-<h1 id="衍生知识"><a href="#衍生知识" class="headerlink" title="衍生知识"></a>衍生知识</h1><ol>
-<li><p>Volatile的内存屏障策略</p>
-<p> 特点：严格保守，悲观</p>
-<p> 在每个volatile写操作前插入写-写屏障，在写操作后插入写-读屏障；</p>
-<p> 在每个volatile读操作前插入读-读屏障，在读操作后插入读-写屏障；</p>
-<p> 有效防止Volatile变量及其后续指令的重排序、线程之间实现安全的通信，正式因为这样，被Volatile修饰过的变量便显现出了锁的特性</p>
-</li>
-<li><p>Final的内存屏障</p>
-<p> 在新建对象过程中，后遭提对final的初始化写入和这个对赋值给其他引用变量不能重排序</p>
-<p> final域对象的赋值引用和调用final值不能重排序</p>
-<p> 必须保证final域写入后才能引用和读取</p>
-<p> 写final域之前会插入写-写屏障保障final域的可见而且防止重排序</p>
-<p> 读final域就是之前插入读-读屏障实现防止重排序</p>
-<p> x86处理器会对读-读、写-写忽略</p>
-</li>
-</ol>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>Java的并发与内存屏障息息相关，内存屏障保障了并发的线程安全问题，弄懂底层实现能更好去理解Java的并发思想，所以才有了这篇文章，如有错漏，还望批评指导</p>
-
+        
+        
+        
     
 
     
-</div>
+    <!-- Index nav -->
+        <nav class="material-nav mdl-cell mdl-cell--12-col">
+            <a class="extend prev" rel="prev" href="/archives/"><button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons" role="presentation">arrow_back</i></button></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+        </nav>
+    
 
+    
+        <script>
+    var randomNum;
 
-                
+    var locatePost = $('.locate-thumbnail-symbol').next();
+    for(var i = 0; i < 10; i++) {
+        randomNum = Math.floor(Math.random() * undefined + 1);
 
-                <!-- Post Comments -->
-                
-                    
+        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
+        locatePost.children('.post_thumbnail-random').css('background-image', 'url(' + '/img/random/material-' + randomNum + '.png' + ')')
 
-
-    <!-- 使用 DISQUS -->
-    <div id="disqus-comment">
-        <div id="disqus_thread"></div>
-<script>
-    queue.offer(function() {
-            var disqus_config = function () {
-                this.page.url = 'https://airymiku.github.io/2018/05/26/初识内存屏障/index.html';  // Replace PAGE_URL with your page's canonical URL variable
-                this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-            };
-
-            (function() { // DON'T EDIT BELOW THIS LINE
-                var d = document;
-                var s = d.createElement('script');
-                s.src = '//null.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', + new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        });
+        locatePost = locatePost.next();
+    }
 </script>
 
-    </div>
-    <style>
-        #disqus-comment{
-            background-color: #eee;
-            padding: 2pc;
-        }
-    </style>
-
-
-
-                
-            </div>
-
-            <!-- Post Prev & Next Nav -->
-            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
-    <!-- Prev Nav -->
     
-        <a href="/2018/06/02/初探View之事件分发机制/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
-
-    <!-- Section Spacer -->
-    <div class="section-spacer"></div>
-
-    <!-- Next Nav -->
-    
-        <a href="/2018/05/13/Android开发学习日记/" id="post_nav-older" class="next-content">
-            旧篇
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_forward</i>
-            </button>
-        </a>
-    
-</nav>
-
-        </div>
-    </div>
-
+</div>
 
 
                     

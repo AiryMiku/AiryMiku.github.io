@@ -10,7 +10,7 @@
     
     <title>
         
-            初识内存屏障 | 
+            RxJava简单分析 | 
         
         Airy&#39;s Blog
     </title>
@@ -27,7 +27,7 @@
     <meta name="theme-color" content="#4169E1">
     <meta name="author" content="AiryMiku">
     <meta name="description" content="start from zero">
-    <meta name="keywords" content="不学习怎么能变强,Java">
+    <meta name="keywords" content="不学习怎么能变强,Android">
 
     <!--iOS -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -48,9 +48,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://airymiku.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="初识内存屏障 | Airy&#39;s Blog">
+    <meta property="og:title" content="RxJava简单分析 | Airy&#39;s Blog">
     <meta property="og:description" content="start from zero">
-    <meta property="og:article:tag" content="Java"> 
+    <meta property="og:article:tag" content="Android"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -234,7 +234,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#初识内存屏障"><span class="post-toc-number">1.</span> <span class="post-toc-text">初识内存屏障</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#衍生知识"><span class="post-toc-number">2.</span> <span class="post-toc-text">衍生知识</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#尾巴"><span class="post-toc-number">3.</span> <span class="post-toc-text">尾巴</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#RxJava2源码分析"><span class="post-toc-number">1.</span> <span class="post-toc-text">RxJava2源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RxJava是什么"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">RxJava是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#开车"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">开车</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程切换"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">线程切换</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -264,7 +264,7 @@
         
     
             <p class="article-headline-p">
-                初识内存屏障
+                RxJava简单分析
             </p>
         </div>
 
@@ -283,7 +283,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>AiryMiku</strong>
-        <span>5月 26, 2018</span>
+        <span>8月 18, 2018</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -307,7 +307,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/Java/">Java</a>
+        <a class="post_tag-link" href="/tags/Android/">Android</a>
     </ul>
     
 
@@ -323,7 +323,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=RxJava简单分析&url=https://airymiku.github.io//2018/08/18/RxJava简单分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -332,7 +332,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=初识内存屏障&url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html&via=AiryMiku" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=RxJava简单分析&url=https://airymiku.github.io//2018/08/18/RxJava简单分析/index.html&via=AiryMiku" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -341,7 +341,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://airymiku.github.io//2018/08/18/RxJava简单分析/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -350,7 +350,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://airymiku.github.io//2018/05/26/初识内存屏障/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://airymiku.github.io//2018/08/18/RxJava简单分析/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -374,61 +374,27 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="初识内存屏障"><a href="#初识内存屏障" class="headerlink" title="初识内存屏障"></a>初识内存屏障</h1><p>内存屏障的概念来自硬件层，硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即读屏障和写屏障。</p>
-<ul>
-<li>内存屏障有两个作用：</li>
-</ul>
-<blockquote>
-<ol>
-<li>阻止屏障两侧的指令重排序；</li>
-<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</li>
-</ol>
-</blockquote>
-<ul>
-<li><p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；</p>
-</li>
-<li><p>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-</li>
-</ul>
-<p>我们把Load就是我们内存操作上的读，Store就是写</p>
-<p>Java的内存屏障有四种，实际上就是读和写的组合，来完成一系列的屏障和数据同步功能</p>
-<p>读-读屏障：</p>
-<pre><code>Load1;
-LoadLoad;
-Load2;
-</code></pre><p>保证Load1要在Load2及以后的操作之前先完成读取的操作</p>
-<p>写-写屏障：</p>
-<pre><code>Store1;
-StoreStore;
-Store2;
-</code></pre><p>保证Store1的写操作要在Store2及以后之前对其他处理器可见（线程）</p>
-<p>读-写屏障：</p>
-<pre><code>Load1;
-LoadStore;
-Store2;
-</code></pre><p>保证Load1要在Store2及以后之前先完成读取的操作-</p>
-<p>写-读屏障：</p>
-<pre><code>Store1;
-StoreLoad;
-Load2;
-</code></pre><p>保证Store1的写操作要在Load2及以后之前要对其他处理器可见（线程）</p>
-<h1 id="衍生知识"><a href="#衍生知识" class="headerlink" title="衍生知识"></a>衍生知识</h1><ol>
-<li><p>Volatile的内存屏障策略</p>
-<p> 特点：严格保守，悲观</p>
-<p> 在每个volatile写操作前插入写-写屏障，在写操作后插入写-读屏障；</p>
-<p> 在每个volatile读操作前插入读-读屏障，在读操作后插入读-写屏障；</p>
-<p> 有效防止Volatile变量及其后续指令的重排序、线程之间实现安全的通信，正式因为这样，被Volatile修饰过的变量便显现出了锁的特性</p>
-</li>
-<li><p>Final的内存屏障</p>
-<p> 在新建对象过程中，后遭提对final的初始化写入和这个对赋值给其他引用变量不能重排序</p>
-<p> final域对象的赋值引用和调用final值不能重排序</p>
-<p> 必须保证final域写入后才能引用和读取</p>
-<p> 写final域之前会插入写-写屏障保障final域的可见而且防止重排序</p>
-<p> 读final域就是之前插入读-读屏障实现防止重排序</p>
-<p> x86处理器会对读-读、写-写忽略</p>
-</li>
-</ol>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>Java的并发与内存屏障息息相关，内存屏障保障了并发的线程安全问题，弄懂底层实现能更好去理解Java的并发思想，所以才有了这篇文章，如有错漏，还望批评指导</p>
+        <h1 id="RxJava2源码分析"><a href="#RxJava2源码分析" class="headerlink" title="RxJava2源码分析"></a>RxJava2源码分析</h1><h2 id="RxJava是什么"><a href="#RxJava是什么" class="headerlink" title="RxJava是什么"></a>RxJava是什么</h2><p>RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。</p>
+<h2 id="开车"><a href="#开车" class="headerlink" title="开车"></a>开车</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/img/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/img/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/img/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/img/RxJava/rxjava-4.png" alt=""></p>
+<p>可以看到最终创建的是一个ObserveCreate对象，顺便会判空，判空代码很简单就是判null抛NullPointException<br><img src="/img/RxJava/rxjava-5.png" alt=""></p>
+<p>ObservableCreate继承了Observable接口，内部持有onSubscribe对象也就是我们的上游数据source<br><img src="/img/RxJava/rxjava-6.png" alt=""></p>
+<p>onAssembly是不是很熟悉，拿出你们的iPhone，后背就写着Assembled in China,这里就是对我们的数据源进行组装了（上面其实也组装了特别多），这里有个全局回调函数，全局搜索apply()还不止一个，暂时放一放<br><img src="/img/RxJava/rxjava-7.png" alt=""></p>
+<p>那么到这里数据已经包装好了，下面是下游（观察者）的精彩操作<br><img src="/img/RxJava/rxjava-8.png" alt=""><br><img src="/img/RxJava/rxjava-9.png" alt=""></p>
+<p>调用onSubscribe开始订阅上游数据，可以看到同样有全局回调函数，和上面一样默认空<br><img src="/img/RxJava/rxjava-10.png" alt=""><br>上上双重判空略过，我们只关心整个的逻辑，subscribeActual才是我们需要关注的，observer又被包装成CreateEmitter准备发射<br><img src="/img/RxJava/rxjava-11.png" alt=""><br>这里的onSubscribe就是我们自己写的回调<br><img src="/img/RxJava/rxjava-12.png" alt=""><br>进入subscribe，我们又回来啦，这里直接调用之前的emitter发送数据<br><img src="/img/RxJava/rxjava-13.png" alt=""></p>
+<p>回调下游的onNext，其中isDisposed判断是否要切断数据流<br><img src="/img/RxJava/rxjava-14.png" alt=""></p>
+<p>我们上游是有一个onComplete表示切断数据，现在调用了，可以看到他也会判断是否切断，成功回调后，最终也会到dispose这个方法切断数据流<br><img src="/img/RxJava/rxjava-15.png" alt=""></p>
+<p>直接把自己传进去，可以看到这个是由DisposableHelper来真正操作的，前面的判断也是如此<br><img src="/img/RxJava/rxjava-16.png" alt=""></p>
+<p>判断是否已经处理完，这个函数决定是否回调observable的onXX，否则当调用onComplete时表示切断水管且不再回调onXX，还可以看到这里是一个原子引用，保证并发的安全（666）<br><img src="/img/RxJava/rxjava-17.png" alt=""><br>complete后面接着一个next，但是此时我们已经切断了数据，所以虽然接收到但是我们也只得抛弃掉<br><img src="/img/RxJava/rxjava-18.png" alt=""></p>
+<p>这就完成了一个发射数据-&gt; 接收数据的流程</p>
+<h2 id="线程切换"><a href="#线程切换" class="headerlink" title="线程切换"></a>线程切换</h2><p>无独有偶，线程也只是变成scheduler包装起来还是那个Observable只不过变成SubscribeOn了<br><img src="/img/RxJava/rxjava-19.png" alt=""></p>
+<p>有了上面的经验我们直接看subcribeActual的里一个重载函数<br><img src="/img/RxJava/rxjava-20.png" alt=""></p>
+<p>可以看到scheduler里面真正要跑的是worker<br><img src="/img/RxJava/rxjava-21.png" alt=""><br>把我们的任务包装成disposetask，这是一个runnable<br><img src="/img/RxJava/rxjava-22.png" alt=""><br><img src="/img/RxJava/rxjava-23.png" alt=""><br>用了线程池来启动任务</p>
+<p><img src="/img/RxJava/rxjava-24.png" alt=""><br>进行线程切换如Schedules.io()会用到concurrent并发包的线程池，这里把线程服务放入线程池</p>
+<p>最终来到scheduleActual，这里有一系列的操作线程池运行我们的任务，还会包装成future<br><img src="/img/RxJava/rxjava-25.png" alt=""></p>
+<p>可以看到这时的dispose操作伴随着线程池的shutdown<br><img src="/img/RxJava/rxjava-26.png" alt=""></p>
+<p>线程经过包装，默认优先级是5，设置成守护进程<br><img src="/img/RxJava/rxjava-27.png" alt=""></p>
+<p>worker &lt;- task &lt;- thread 就是大致的一个流程</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>RxJava的核心思想简单理解就差不多了，剩下的应该就很容易去分析了</p>
 
     
 
@@ -449,7 +415,7 @@ Load2;
 <script>
     queue.offer(function() {
             var disqus_config = function () {
-                this.page.url = 'https://airymiku.github.io/2018/05/26/初识内存屏障/index.html';  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.url = 'https://airymiku.github.io/2018/08/18/RxJava简单分析/index.html';  // Replace PAGE_URL with your page's canonical URL variable
                 this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
             };
 
@@ -480,21 +446,13 @@ Load2;
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2018/06/02/初探View之事件分发机制/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/2018/05/13/Android开发学习日记/" id="post_nav-older" class="next-content">
+        <a href="/2018/07/26/TCP-IP笔记/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
