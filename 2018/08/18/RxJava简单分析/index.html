@@ -134,7 +134,7 @@
 
     <style>
       body{
-        background-color: #F0FFFF;
+        background-color: #FAFAD2;
       }
 
       /* blog_info bottom background */
@@ -234,7 +234,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#RxJava2源码分析"><span class="post-toc-number">1.</span> <span class="post-toc-text">RxJava2源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RxJava是什么"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">RxJava是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#开车"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">开车</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程切换"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">线程切换</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#RxJava2源码分析"><span class="post-toc-number">1.</span> <span class="post-toc-text">RxJava2源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RxJava是什么"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">RxJava是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">基本</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程切换"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">线程切换</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -375,7 +375,7 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
         <h1 id="RxJava2源码分析"><a href="#RxJava2源码分析" class="headerlink" title="RxJava2源码分析"></a>RxJava2源码分析</h1><h2 id="RxJava是什么"><a href="#RxJava是什么" class="headerlink" title="RxJava是什么"></a>RxJava是什么</h2><p>RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。</p>
-<h2 id="开车"><a href="#开车" class="headerlink" title="开车"></a>开车</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/img/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/img/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/img/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/img/RxJava/rxjava-4.png" alt=""></p>
+<h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/img/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/img/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/img/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/img/RxJava/rxjava-4.png" alt=""></p>
 <p>可以看到最终创建的是一个ObserveCreate对象，顺便会判空，判空代码很简单就是判null抛NullPointException<br><img src="/img/RxJava/rxjava-5.png" alt=""></p>
 <p>ObservableCreate继承了Observable接口，内部持有onSubscribe对象也就是我们的上游数据source<br><img src="/img/RxJava/rxjava-6.png" alt=""></p>
 <p>onAssembly是不是很熟悉，拿出你们的iPhone，后背就写着Assembled in China,这里就是对我们的数据源进行组装了（上面其实也组装了特别多），这里有个全局回调函数，全局搜索apply()还不止一个，暂时放一放<br><img src="/img/RxJava/rxjava-7.png" alt=""></p>
