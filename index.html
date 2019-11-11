@@ -455,6 +455,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -473,155 +492,21 @@
       
         
           
-            <h1 id="安装CentOS-7"><a href="#安装CentOS-7" class="headerlink" title="安装CentOS 7"></a>安装CentOS 7</h1><p>下载链接 </p>
-<ul>
-<li><a href="http://mirrors.163.com/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso" target="_blank" rel="external">http://mirrors.163.com/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso</a></li>
-</ul>
-<p>最小安装版（推荐，使用此镜像不用选择软件安装，只需配置用户即可） </p>
-<ul>
-<li><a href="http://mirrors.163.com/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso" target="_blank" rel="external">http://mirrors.163.com/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso</a></li>
-</ul>
-<h2 id="CentOS-安装流程及其配置"><a href="#CentOS-安装流程及其配置" class="headerlink" title="CentOS 安装流程及其配置"></a>CentOS 安装流程及其配置</h2><p>使用VM创建虚拟机，进入安装界面<br><img src="/img/CentOS_Hadoop_1.png" alt="pic_1"><br>选择语言<br><img src="/img/CentOS_Hadoop_2.png" alt="pic_2"></p>
-<ul>
-<li>（重要）点击软件选择<br><img src="/img/CentOS_Hadoop_3.png" alt="pic_3"><br><img src="/img/CentOS_Hadoop_4.png" alt="pic_4"><br><img src="/img/CentOS_Hadoop_5.png" alt="pic_5"><br>设置密码<br><img src="/img/CentOS_Hadoop_6.png" alt="pic_6"><br>等待安装完成</li>
-</ul>
-<p>修改主机名</p>
-<ul>
-<li>使用 hostnamectl查看，修改用hostnamectl set-hostname [name]</li>
-</ul>
-<p>查看&amp;关闭防火墙<br>    CentOS7默认使用firewall作为防火墙查看防火墙状态</p>
-<ul>
-<li>firewall -cmd –state</li>
-</ul>
-<p>停止防火墙</p>
-<ul>
-<li>systemctl stop firewalld.service</li>
-</ul>
-<p>禁止开机启动</p>
-<ul>
-<li>systemctl disable firewalld.service</li>
-</ul>
-<p>设置IP</p>
-<ul>
-<li>vi /etc/sysconfig/network-scripts/ifcfg-ens33</li>
-<li>把ONBOOT=no修改为yes</li>
-</ul>
-<p>重启网络服务</p>
-<ul>
-<li>sudo service network restart</li>
-</ul>
-<p>生成Hadoop账户<br><img src="/img/CentOS_Hadoop_7.png" alt="pic_7"><br>图为Slave的生成，其他也一样</p>
-<p>配置免密码的SSH</p>
-<p>首先，切换账户</p>
-<ul>
-<li>使用 su - [username] 进行切换</li>
-</ul>
-<p>生成密钥对</p>
-<ul>
-<li>生成密钥 ssh-keygen -t rsa 使用rsa算法</li>
-</ul>
-<p>获取本机IP地址</p>
-<ul>
-<li>ifconfig 找到ens33里面的inet，后面的就是IP地址</li>
-<li>如果显示command not found，可以先ping www.baidu.com 确认虚拟机可以连接外网，然后使用yum install net-tool 安装即可使用</li>
-<li>又或者使用ip addr也可获得</li>
-</ul>
-<p>将需要ssh的主机加入hosts</p>
-<ul>
-<li>vi /etc/hosts</li>
-<li>以 [IP地址] [主机名]的形式逐条写入</li>
-</ul>
-<p>授予普通用户权限，不然无法使用scp和cat</p>
-<ul>
-<li>用root账户操作</li>
-<li>chmod 640 /etc/sudoers使其可写</li>
-<li><img src="/img/CentOS_Hadoop_8.png" alt="pic_8">找到这个加入自己账户名称且授予权限</li>
-<li>chmod 440 /etc/sudoers 复原权限</li>
-<li>大功告成</li>
-</ul>
-<p>分发密钥<br>由master机器执行以下命令</p>
-<ul>
-<li>cat id_rsa.pub &gt;&gt; authorized_keys 生成公钥钥信息文件</li>
-<li>chmod 600 authorized_keys 修改权限，使其可以使用scp传输</li>
-<li>scp authorized_keys slave[n]:/home/[用户名]/.ssh</li>
-</ul>
-<p>slave执行</p>
-<ul>
-<li>cat id_rsa.pub &gt;&gt; authorized_keys</li>
-<li>scp authorized_keys slave[n]:/home/[用户名]/.ssh 传递到下一个slave机器</li>
-</ul>
-<p>最后的slave机器</p>
-<ul>
-<li>cat id_rsa.pub &gt;&gt; authorized_keys</li>
-<li>scp authorized_keys master:/home/[用户名]/.ssh 传递到下一个slave机器，注意master</li>
-</ul>
-<p>然后让master分发密钥</p>
-<ul>
-<li><p>scp authorized_keys slave[n]:/home/[用户名]/.ssh 依次执行</p>
-<p>分发流程图<br><img src="/img/CentOS_Hadoop_9.png" alt="pic_9"></p>
-</li>
-<li>注意此时Master可以任意连接slave，slave彼此也能连接，但是不能免密连接master</li>
-</ul>
-<h1 id="配置Hadoop"><a href="#配置Hadoop" class="headerlink" title="配置Hadoop"></a>配置Hadoop</h1><h2 id="开始配置"><a href="#开始配置" class="headerlink" title="开始配置"></a>开始配置</h2><ul>
-<li>下载链接 <a href="http://mirrors.hust.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz" target="_blank" rel="external">http://mirrors.hust.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz</a></li>
-<li>Hadoop 2.7.7</li>
-<li>下载安装包解压</li>
-<li>用winscp等工具上传到centOS</li>
-<li>cd 到自己的用户目录</li>
-<li>tar zxvf hadoopxxxx.tar.gz 解压</li>
-</ul>
-<h2 id="完全分布式模式的配置"><a href="#完全分布式模式的配置" class="headerlink" title="完全分布式模式的配置"></a>完全分布式模式的配置</h2><p>创建一个tmp目录在Hadoop解压的文件目录下<br>进入/etc/Hadoop，以下文件操作均在主节点操作</p>
-<p>修改core-site.xml<br>在Configuration内根据自己的实际填入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">    &lt;value&gt;hdfs://fengzhaohao0:9000&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">    &lt;value&gt;/home/fengzh/hadoop-2.7.7&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure></p>
-<p>修改hdfs-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">    &lt;value&gt;2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>修改mapred-site.xml（注意，此文件后缀为.template,删除后缀即可）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">    &lt;value&gt;yarn&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p> 修改yarn-site.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;</div><div class="line">    &lt;value&gt;fengzhaohao0&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
-<p>修改masters和slaves文件</p>
-<ul>
-<li>没则创建，有就直接填入</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// file in masters</div><div class="line">[主节点主机名]</div><div class="line"></div><div class="line">//file in slaves</div><div class="line">[Slave主机名] //多台主机逐行填写</div></pre></td></tr></table></figure>
-<p>主节点向节点复制Hadoo</p>
-<ul>
-<li>scp -r ./hadoop-2.7.7 [slave name]:/home/[username] </li>
-</ul>
-<p>格式化完全分布集群（do in master）</p>
-<ul>
-<li>cd /home/hadoop-2.7.7/bin</li>
-<li>./hdfs namenode -format</li>
-</ul>
-<p>启动集群</p>
-<ul>
-<li>cd /home/hadoop-2.7.7/sbin</li>
-<li>./start-all.sh //会提示废弃，但不用管，能用</li>
-</ul>
-<p>使用jsp命令查看节点集群启动情况</p>
-<p>web浏览集群</p>
-<ul>
-<li>[IP]:50070 NameNode集群监控</li>
-<li>[IP]:8088 ResourceManager监控</li>
-<li>[IP]:8042 NodeManager监控</li>
-</ul>
-<p>系统报告</p>
-<ul>
-<li>cd /home/hadoop-2.7.7/sbin</li>
-<li>./hdfs dfsadmin -report</li>
-</ul>
-<h1 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h1><h2 id="Openjdk"><a href="#Openjdk" class="headerlink" title="Openjdk"></a>Openjdk</h2><ul>
-<li>没有jps，需要在root下执行yum install -y  Java-1.8.0-openjdk-devel安装jps插件</li>
-</ul>
-<h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><ul>
-<li>Hadoop 2.7.7 默认没有masters文件，须自行添加使用</li>
-</ul>
+          安装CentOS 7下载链接 
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/10/23/CentOS 7 安装与 Hadoop 配置/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+http://mirrors.163.com/centos/7.5.1804/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso
+
+最小安装版（推荐，使用此镜像不用选择软件安装，只需配置用户即可） 
+
+http://mirrors.16
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/10/23/CentOS 7 安装与 Hadoop 配置/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -724,6 +609,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -742,34 +646,16 @@
       
         
           
-            <h1 id="RxJava2源码分析"><a href="#RxJava2源码分析" class="headerlink" title="RxJava2源码分析"></a>RxJava2源码分析</h1><h2 id="RxJava是什么"><a href="#RxJava是什么" class="headerlink" title="RxJava是什么"></a>RxJava是什么</h2><p>RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。</p>
-<h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/img/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/img/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/img/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/img/RxJava/rxjava-4.png" alt=""></p>
-<p>可以看到最终创建的是一个ObserveCreate对象，顺便会判空，判空代码很简单就是判null抛NullPointException<br><img src="/img/RxJava/rxjava-5.png" alt=""></p>
-<p>ObservableCreate继承了Observable接口，内部持有onSubscribe对象也就是我们的上游数据source<br><img src="/img/RxJava/rxjava-6.png" alt=""></p>
-<p>onAssembly是不是很熟悉，拿出你们的iPhone，后背就写着Assembled in China,这里就是对我们的数据源进行组装了（上面其实也组装了特别多），这里有个全局回调函数，全局搜索apply()还不止一个，暂时放一放<br><img src="/img/RxJava/rxjava-7.png" alt=""></p>
-<p>那么到这里数据已经包装好了，下面是下游（观察者）的精彩操作<br><img src="/img/RxJava/rxjava-8.png" alt=""><br><img src="/img/RxJava/rxjava-9.png" alt=""></p>
-<p>调用onSubscribe开始订阅上游数据，可以看到同样有全局回调函数，和上面一样默认空<br><img src="/img/RxJava/rxjava-10.png" alt=""><br>上上双重判空略过，我们只关心整个的逻辑，subscribeActual才是我们需要关注的，observer又被包装成CreateEmitter准备发射<br><img src="/img/RxJava/rxjava-11.png" alt=""><br>这里的onSubscribe就是我们自己写的回调<br><img src="/img/RxJava/rxjava-12.png" alt=""><br>进入subscribe，我们又回来啦，这里直接调用之前的emitter发送数据<br><img src="/img/RxJava/rxjava-13.png" alt=""></p>
-<p>回调下游的onNext，其中isDisposed判断是否要切断数据流<br><img src="/img/RxJava/rxjava-14.png" alt=""></p>
-<p>我们上游是有一个onComplete表示切断数据，现在调用了，可以看到他也会判断是否切断，成功回调后，最终也会到dispose这个方法切断数据流<br><img src="/img/RxJava/rxjava-15.png" alt=""></p>
-<p>直接把自己传进去，可以看到这个是由DisposableHelper来真正操作的，前面的判断也是如此<br><img src="/img/RxJava/rxjava-16.png" alt=""></p>
-<p>判断是否已经处理完，这个函数决定是否回调observable的onXX，否则当调用onComplete时表示切断水管且不再回调onXX，还可以看到这里是一个原子引用，保证并发的安全（666）<br><img src="/img/RxJava/rxjava-17.png" alt=""><br>complete后面接着一个next，但是此时我们已经切断了数据，所以虽然接收到但是我们也只得抛弃掉<br><img src="/img/RxJava/rxjava-18.png" alt=""></p>
-<p>这就完成了一个发射数据-&gt; 接收数据的流程</p>
-<h2 id="线程切换"><a href="#线程切换" class="headerlink" title="线程切换"></a>线程切换</h2><p>无独有偶，线程也只是变成scheduler包装起来还是那个Observable只不过变成SubscribeOn了<br><img src="/img/RxJava/rxjava-19.png" alt=""></p>
-<p>有了上面的经验我们直接看subcribeActual的里一个重载函数<br><img src="/img/RxJava/rxjava-20.png" alt=""></p>
-<p>可以看到scheduler里面真正要跑的是worker<br><img src="/img/RxJava/rxjava-21.png" alt=""><br>把我们的任务包装成disposetask，这是一个runnable<br><img src="/img/RxJava/rxjava-22.png" alt=""><br><img src="/img/RxJava/rxjava-23.png" alt=""><br>用了线程池来启动任务</p>
-<p><img src="/img/RxJava/rxjava-24.png" alt=""><br>进行线程切换如Schedules.io()会用到concurrent并发包的线程池，这里把线程服务放入线程池</p>
-<p>最终来到scheduleActual，这里有一系列的操作线程池运行我们的任务，还会包装成future<br><img src="/img/RxJava/rxjava-25.png" alt=""></p>
-<p>可以看到这时的dispose操作伴随着线程池的shutdown<br><img src="/img/RxJava/rxjava-26.png" alt=""></p>
-<p>线程经过包装，默认优先级是5，设置成守护进程<br><img src="/img/RxJava/rxjava-27.png" alt=""></p>
-<p>worker &lt;- task &lt;- thread 就是大致的一个流程</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>RxJava的核心思想简单理解就差不多了，剩下的应该就很容易去分析了</p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/18/RxJava简单分析/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+          RxJava2源码分析RxJava是什么RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。
+基本首先我
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/18/RxJava简单分析/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -872,6 +758,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -890,208 +795,32 @@
       
         
           
-            <p> 这次来分享一下我的TCP笔记吧，整理了一段时间</p>
-<h1 id="先来个补充知识"><a href="#先来个补充知识" class="headerlink" title="先来个补充知识"></a>先来个补充知识</h1><pre><code>1 字节 = 8bit（我就是经常忘记的人）
-</code></pre><h1 id="为啥有IP"><a href="#为啥有IP" class="headerlink" title="为啥有IP"></a>为啥有IP</h1><p> 协议建立在IP层之上，需要IP层进行传输数据</p>
-<h1 id="这俩在什么层"><a href="#这俩在什么层" class="headerlink" title="这俩在什么层"></a>这俩在什么层</h1><p> 运输层</p>
-<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
-<li><p>面向链接</p>
-</li>
-<li><p>点对点</p>
-</li>
-<li><p>可靠交付</p>
-</li>
-<li><p>全双工</p>
-</li>
-<li><p>面向字节流</p>
-</li>
-</ul>
-<h2 id="TCP段格式"><a href="#TCP段格式" class="headerlink" title="TCP段格式"></a>TCP段格式</h2><h2 id="首部-160bit"><a href="#首部-160bit" class="headerlink" title="首部 160bit"></a>首部 160bit</h2><ul>
-<li><p>源端口 16bit</p>
-</li>
-<li><p>目的端口 16bit</p>
-</li>
-<li><p>序号 数据部分在发送方数据流的位置 32bit</p>
-</li>
-<li><p>确认号 指出接收方希望收到对方下次发送的数据流中的位置 32bit 发送数据部分的第一个字节的序号（确认号=N -&gt; N-1之前的数据confirm）</p>
-</li>
-<li><p>HLEN 首部长度  4bit 可变，可以确定首部和数据的分界</p>
-</li>
-<li><p>保留 6bit</p>
-</li>
-</ul>
-<h2 id="控制位-为-1-的时候"><a href="#控制位-为-1-的时候" class="headerlink" title="控制位 为 1 的时候"></a>控制位 为 1 的时候</h2><ul>
-<li><p>URG 紧急标志 尽快发送报文</p>
-</li>
-<li><p>ACK 确认标志，确认字段有效</p>
-</li>
-<li><p>PSH 推送标志，发送方立即发送缓冲区中的数据</p>
-</li>
-<li><p>RST 复位标志 有严重差错，立即释放连接</p>
-</li>
-<li><p>SYN 同步标志 表示请求连接</p>
-</li>
-<li><p>FIN 终止标志 数据发送完毕，释放连接</p>
-</li>
-</ul>
-<h2 id="其他字段"><a href="#其他字段" class="headerlink" title="其他字段"></a>其他字段</h2><ul>
-<li><p>窗口大小 16bit（接收窗口）</p>
-</li>
-<li><p>校验和 16bit</p>
-</li>
-<li><p>紧急指针16 bit</p>
-</li>
-<li><p>选项和填充 &lt;= 40 字节 </p>
-</li>
-<li><p>MSS 最大报文长度，控制数据大小提高利用率，default val = 536</p>
-</li>
-<li><p>窗口扩大 【RFC 1323】</p>
-</li>
-<li><p>时间戳【RFC 1323】</p>
-</li>
-<li><p>选择确认 SACK【RFC 2018】</p>
-</li>
-<li><p>数据 必须是16bit的倍数</p>
-</li>
-<li><p>伪首部 12 bit</p>
-</li>
-<li><p>验证TCP数据段是否传送到了正确目标端</p>
-</li>
-<li><p>源IP地址 32bit</p>
-</li>
-<li><p>目标IP地址 32bit</p>
-</li>
-<li><p>全0 8bit</p>
-</li>
-<li><p>协议 8bit</p>
-</li>
-<li><p>TCP总长度 16bit</p>
-</li>
-</ul>
-<h2 id="可靠传输的实现"><a href="#可靠传输的实现" class="headerlink" title="可靠传输的实现"></a>可靠传输的实现</h2><ul>
-<li><p>滑动窗口 字节为单位</p>
-</li>
-<li><p>通知窗口 or 发送窗口</p>
-</li>
-<li><p>可用窗口 or 有效窗口 = 允许发送数据但是未得到确认</p>
-</li>
-<li><p>滑动已经发送但是未收到确认的窗口 可用窗口++ 一段时间未确认进入超时重传</p>
-</li>
-</ul>
-<h2 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h2><p>通过调整窗口大小，让接收方来得及接收</p>
-<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>周而复始三种策略</p>
-<ul>
-<li><p>慢启动</p>
-</li>
-<li><p>拥塞避免</p>
-</li>
-<li><p>超时重传</p>
-</li>
-</ul>
-<h2 id="差错控制"><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h2><p>假设AB之间的链接</p>
-<p>RTT</p>
-<p>U（利用率）= Td（Td+RTT+Ta）</p>
-<h2 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h2><h3 id="阶段"><a href="#阶段" class="headerlink" title="阶段"></a>阶段</h3><ul>
-<li><p>连接建立</p>
-</li>
-<li><p>数据传送</p>
-</li>
-<li><p>连接释放</p>
-</li>
-</ul>
-<h2 id="建立连接（三次握手）"><a href="#建立连接（三次握手）" class="headerlink" title="建立连接（三次握手）"></a>建立连接（三次握手）</h2><pre><code>客户端A                 客户端B
-</code></pre><ul>
-<li><p>主动打开——————————————被动打开</p>
-</li>
-<li><p>SYN-SENT——————————————LISTEN</p>
-</li>
-<li><p>—&gt; SYN = 1,seq = x 我要连接</p>
-</li>
-<li><p>SYN = 1,ACK = 1,seq = y,ack = x + 1 &lt;— 好，那就连接</p>
-</li>
-<li><p>ACK = 1,seq = x + 1,ack = y + 1 —&gt; 好，我收到你的“好，那就连接”</p>
-</li>
-<li><p>ESTABLISHED       &lt;–same as right</p>
-</li>
-<li><p>———-数据传输————</p>
-</li>
-</ul>
-<h2 id="连接释放（四次）"><a href="#连接释放（四次）" class="headerlink" title="连接释放（四次）"></a>连接释放（四次）</h2><pre><code>客户端A                  客户端B
-</code></pre><ul>
-<li><p>主动关闭——————————————被动关闭</p>
-</li>
-<li><p>———-数据传输————</p>
-</li>
-<li><p>ESTABLISHED       &lt;–same as right</p>
-</li>
-<li><p>FIN-WAIT-1 —&gt;FIN = 1,seq = u 分手吧</p>
-</li>
-<li><p>—–尽快传输剩下的数据—–</p>
-</li>
-<li><p>FIN-WAIT-2 ACK = 1,seq = v,ack = u + 1 &lt;— 此时通知应用进程 CLOSE-WAIT 可以，先把东西还给你</p>
-</li>
-<li><p>FIN = 1,ACK  = 1,seq = w,ack = u + 1 &lt;— 被动关闭 还完了</p>
-</li>
-<li><p>—》 ACK = 1，seq = u + 1(已经不传输数据，没必要+1),ack = w + 1 LAST-ACK 好，收到了你的东西</p>
-</li>
-<li><p>TIME-WAIT 此时A还需等待2MSL，防止新连接复用端口（下一次个连接不会出现上一次的报文段），还可以超时重传最后的FIN+ACK确认  让我再伤心一会，还不想着新的恋情</p>
-</li>
-</ul>
-<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><h2 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h2><ul>
-<li><p>复用分用</p>
-</li>
-<li><p>有限的差错检测</p>
-</li>
-</ul>
-<h2 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h2><ul>
-<li><p>无连接</p>
-</li>
-<li><p>最大努力交付</p>
-</li>
-<li><p>面向报文</p>
-</li>
-<li><p>无拥塞控制</p>
-</li>
-<li><p>一对多，一对一，多对多</p>
-</li>
-<li><p>首部开销小（对比TCP）8 vs 20字节</p>
-</li>
-<li><p>首部+数据一齐校验</p>
-</li>
-</ul>
-<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><ul>
-<li><p>源端口 16bit</p>
-</li>
-<li><p>目的端口 16bit</p>
-</li>
-<li><p>UDP总长度 16bit</p>
-</li>
-<li><p>校验和 16bit</p>
-</li>
-<li><p>数据 16bit倍数</p>
-</li>
-</ul>
-<h2 id="伪首部"><a href="#伪首部" class="headerlink" title="伪首部"></a>伪首部</h2><ul>
-<li><p>源IP地址 32bti</p>
-</li>
-<li><p>目的IP地址 32bit</p>
-</li>
-<li><p>全0 8 bit</p>
-</li>
-<li><p>协议 8bit</p>
-</li>
-<li><p>UDP总长度 16bit</p>
-</li>
-</ul>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>降低UDP丢包率：</p>
-<p>尽量使用大数据包</p>
+           这次来分享一下我的TCP笔记吧，整理了一段时间
+先来个补充知识1 字节 = 8bit（我就是经常忘记的人）
+为啥有IP 协议建立在IP层之上，需要IP层进行传输数据
+这俩在什么层 运输层
+TCP特点
+面向链接
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/26/TCP-IP笔记/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+点对点
+
+可靠交付
+
+全双工
+
+面向字节流
+
+
+TCP段格式首部 160bit
+源端口
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/26/TCP-IP笔记/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1194,6 +923,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1212,34 +960,22 @@
       
         
           
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>虽然写过Springboot，但是外面的环境基本上都是ssm为主（ssh就算了。。。）,所以开始了ssm的掉坑之旅（真tm坑）</p>
-<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
-<li>Windows 10</li>
-<li>Intelij idea</li>
-<li>jdk8</li>
-</ul>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>首先是新建一个空的Maven项目，右边的模板什么都不要选<br><img src="/img/ssm_1.png" alt="ssm_1"></p>
-<p>然后就是一路的Next，填上Group_ID什么的</p>
-<h2 id="配置Maven下载依赖"><a href="#配置Maven下载依赖" class="headerlink" title="配置Maven下载依赖"></a>配置Maven下载依赖</h2><p>在pom.xml填入以下代码，版本自行选择<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</div><div class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line"></div><div class="line">    &lt;groupId&gt;你自己的&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;同上&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</div><div class="line"></div><div class="line">    &lt;properties&gt;</div><div class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">        &lt;!-- spring版本号 --&gt;</div><div class="line">        &lt;spring.version&gt;4.1.4.RELEASE&lt;/spring.version&gt;</div><div class="line">        &lt;!-- mybatis版本号 --&gt;</div><div class="line">        &lt;mybatis.version&gt;3.2.8&lt;/mybatis.version&gt;</div><div class="line">        &lt;!-- log4j日志文件管理包版本 --&gt;</div><div class="line">        &lt;slf4j.version&gt;1.7.7&lt;/slf4j.version&gt;</div><div class="line">        &lt;log4j.version&gt;1.2.17&lt;/log4j.version&gt;</div><div class="line">        &lt;!-- jackson包版本 --&gt;</div><div class="line">        &lt;jackson.version&gt;2.5.0&lt;/jackson.version&gt;</div><div class="line">    &lt;/properties&gt;</div><div class="line"></div><div class="line">    &lt;dependencies&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.8.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;!-- mybatis核心包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;mybatis.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;!-- mybatis/spring包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.2.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!--spring单元测试依赖 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- springMVC核心包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- spring核心包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.0.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;provided&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.2&lt;/version&gt;</div><div class="line">            &lt;scope&gt;provided&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- 导入Mysql数据库链接jar包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;5.1.30&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- 导入dbcp的jar包，用来在applicationContext.xml中配置数据库 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;commons-dbcp&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;commons-dbcp&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.2.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- JSTL标签类 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;jstl&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jstl&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;!-- 日志文件管理包 --&gt;</div><div class="line">        &lt;!-- log start --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;log4j&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;log4j&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;log4j.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">        &lt;!-- 格式化对象，方便输出日志 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.1.41&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;slf4j.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;slf4j.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;!-- log end --&gt;</div><div class="line">        &lt;!-- 映入JSON --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.codehaus.jackson&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jackson-mapper-asl&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.9.13&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.1.0&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jackson-annotations&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.1.0&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!-- 上传组件包 --&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;commons-fileupload&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;commons-fileupload&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.3.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;commons-io&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;commons-io&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.4&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;commons-codec&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;commons-codec&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.9&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;4.11&lt;/version&gt;</div><div class="line">            &lt;!-- 表示开发的时候引入，发布的时候不会加载此包 --&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;!--Spring test相关依赖--&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;4.1.7.RELEASE&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;RELEASE&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.jsoup&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jsoup&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.8.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;net.sourceforge.htmlunit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;htmlunit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.15&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.seleniumhq.selenium&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;selenium-java&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.33.0&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;us.codecraft&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;webmagic-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;0.6.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;us.codecraft&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;webmagic-extension&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;0.6.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line"></div><div class="line">    &lt;/dependencies&gt;</div><div class="line">    &lt;build&gt;</div><div class="line">        &lt;finalName&gt;hugo&lt;/finalName&gt;</div><div class="line">        &lt;resources&gt;</div><div class="line">            &lt;resource&gt;</div><div class="line">                &lt;directory&gt;src/main/java&lt;/directory&gt;</div><div class="line">                &lt;includes&gt;</div><div class="line">                    &lt;include&gt;**/*.xml&lt;/include&gt;</div><div class="line">                &lt;/includes&gt;</div><div class="line">                &lt;filtering&gt;true&lt;/filtering&gt;</div><div class="line">            &lt;/resource&gt;</div><div class="line">        &lt;/resources&gt;</div><div class="line">    &lt;/build&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure></p>
-<p><img src="/img/ssm_2.png" alt="ssm_2"><br>填好后记得点击这里的同步，让maven自己下载依赖</p>
-<h2 id="文件目录"><a href="#文件目录" class="headerlink" title="文件目录"></a>文件目录</h2><p>如图<br><img src="/img/ssm_3.png" alt="ssm_3"><br>resource需要自己设置成资源根目录，右键make directory as</p>
-<h2 id="Spring、SpringMVC、MyBatis配置"><a href="#Spring、SpringMVC、MyBatis配置" class="headerlink" title="Spring、SpringMVC、MyBatis配置"></a>Spring、SpringMVC、MyBatis配置</h2><p>代码多而繁杂，就直接放地址（真的不是我懒）<br><a href="https://github.com/AiryMiku/SaltedFish_SSM" target="_blank" rel="external">https://github.com/AiryMiku/SaltedFish_SSM</a></p>
-<ul>
-<li>特别注意<br><img src="/img/ssm_4.png" alt="ssm_4"><br>这里的MVC注解使用了org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter<br>不使用网上的AnnotionHandlerAdapter（提示已废弃，还是追下新东西学习下），需要像如图添加注释驱动标志，controller才能正常工作</li>
-</ul>
-<h2 id="设置项目结构"><a href="#设置项目结构" class="headerlink" title="设置项目结构"></a>设置项目结构</h2><ul>
-<li>Modules<br><img src="/img/ssm_5.png" alt="ssm_5"><br>// idea非常智能，会有提示一键设置好Spring了<br><img src="/img/ssm_6.png" alt="ssm_6"><br>webapp目录要注意一下，自己更改为正确的路径</li>
-<li>Artifacts<br><img src="/img/ssm_7.png" alt="ssm_7"><br>// 熟悉在idea Java Web开发的同学应该也是信手拈来</li>
-</ul>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>像所有依赖tomcat运行的项目，设置好自己的tomcat服务器，就可以大快朵颐地进行开发啦</p>
-<h2 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h2><p>由于csdn长期霸屏百度搜索结果，内容与时下开发环境脱节严重，ec泛滥，导致自己也苦苦爬帖再一步步摸索才能比较顺利地搭起来ssm这个环境，经过这一番地折腾，我觉得Spring Boot真的太好了，没有那么多恼人地配置，一步到位，而且不停地失败是会影响学习的心情的，故出此文，给别人、给自己也多多少少有点帮助。</p>
+          前言虽然写过Springboot，但是外面的环境基本上都是ssm为主（ssh就算了。。。）,所以开始了ssm的掉坑之旅（真tm坑）
+环境
+Windows 10
+Intelij idea
+jdk8
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/13/Java——SSM配置/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+创建项目首先是新建一个空的Maven项目，右边的模板什么都不要选
+然后就是一路的Next，填上Grou
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/13/Java——SSM配置/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1342,6 +1078,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1360,52 +1115,27 @@
       
         
           
-            <h1 id="类的加载机制"><a href="#类的加载机制" class="headerlink" title="类的加载机制"></a>类的加载机制</h1><h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p>加载 -&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 -&gt; 使用 -&gt; 卸载</p>
-<p>加载：</p>
-<ol>
-<li>获取类的二进制字节流</li>
-<li>静态储存区转为数据结构</li>
-<li>生成一个Class对象，作为方法区各种数据的访问入口</li>
-</ol>
-<p>验证：</p>
-<ol>
-<li>文件格式验证</li>
-<li>版本验证</li>
-<li>元数据验证</li>
-<li>字节码验证</li>
-<li>符号引用验证</li>
-</ol>
-<p>准备：</p>
-<ol>
-<li>为变量分配内存空间，设置初始值</li>
-</ol>
-<p>解析：</p>
-<ol>
-<li>符号引用</li>
-<li>直接引用</li>
-<li>类或接口的解析</li>
-<li>字段解析</li>
-<li>类方法解析</li>
-<li>接口方法解析</li>
-</ol>
-<p>初始化：</p>
-<ol>
-<li>类构造器<clinit>()</clinit></li>
-</ol>
-<p>类加载器：</p>
-<ol>
-<li>Bootstrap ClassLoader</li>
-<li>自定义类加载器</li>
-</ol>
-<p>双亲委派模型：<br>//辣鸡翻译，这里面只有父与子之间的关系，哪来的双亲<br>简单的说就是如果一个类加载器收到了加载类的指令，自己并不会马上加载，而是先交给父类加载器，只有父类反馈没有加载到，子加载器才会去加载，这样的好处就是保证了Java类型体系的基础，保证了多平台的安全</p>
-<p>破坏双亲委派模型：<br>这个是各种黑科技的基础，热更新热修复<br>Thread Context ClassLoader（线程上下文类加载器）偷偷开的后门</p>
+          类的加载机制类的生命周期加载 -&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 -&gt; 使用 -&gt; 卸载
+加载：
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/23/Java——类的加载机制/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+获取类的二进制字节流
+静态储存区转为数据结构
+生成一个Class对象，作为方法区各种数据的访问入口
+
+验证：
+
+文件格式验证
+版本验证
+元数据验证
+字
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/23/Java——类的加载机制/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1508,6 +1238,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1526,24 +1275,17 @@
       
         
           
-            <p>面试又又又又又挂了</p>
-<p>字节的面试官叫我手写一个阻塞队列，当场石化，硬着头皮写了一个线程安全的队列出来，很尴尬<br>接着问了一下Java的基础，回答得不怎么好，然后再也没问什么了，Android一点没问</p>
-<p>看着小伙伴一个个都找到了实习，而我却在原地踏步，很难受。<br>说好的只见森林不见树木不是很好，可偏偏就是在问森林里的一个树木的枝干或者叶子。<br>不得不说还是自己太菜，本来Android就水深火热，自己还没有磨练技术。</p>
-<p>面试了这么多，总算是有一点点经验：</p>
-<ol>
-<li>不会的真的说不会，不要强上，多沟通（我做人最失败的地方就是这里了）</li>
-<li>基础没你想象的那么浅薄</li>
-<li>基础真的真的很重要</li>
-<li>收益最大其实还是看书，因为前人已经踩过坑了</li>
-</ol>
-<p>最后的暑假奋力一拼吧~沉住气</p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/21/Diary-0X1/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+          面试又又又又又挂了
+字节的面试官叫我手写一个阻塞队列，当场石化，硬着头皮写了一个线程安全的队列出来，很尴尬接着问了一下Java的基础，回答得不怎么好，然后再也没问什么了，Android一点没问
+看着小伙伴一个个都找到了实习，而我却在原地踏步，很难受。说好的只见森林不见树木不是很好，可偏偏就是在问森林
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/21/Diary-0X1/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1646,6 +1388,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1664,24 +1425,17 @@
       
         
           
-            <p>面试又又又又又挂了</p>
-<p>字节的面试官叫我手写一个阻塞队列，当场石化，硬着头皮写了一个线程安全的队列出来，很尴尬<br>接着问了一下Java的基础，回答得不怎么好，然后再也没问什么了，Android一点没问</p>
-<p>看着小伙伴一个个都找到了实习，而我却在原地踏步，很难受。<br>说好的只见森林不见树木不是很好，可偏偏就是在问森林里的一个树木的枝干或者叶子。<br>不得不说还是自己太菜，本来Android就水深火热，自己还没有磨练技术。</p>
-<p>面试了这么多，总算是有一点点经验：</p>
-<ol>
-<li>不会的真的说不会，不要强上，多沟通（我做人最失败的地方就是这里了）</li>
-<li>基础没你想象的那么浅薄</li>
-<li>基础真的真的很重要</li>
-<li>收益最大其实还是看书，因为前人已经踩过坑了</li>
-</ol>
-<p>最后的暑假奋力一拼吧~沉住气</p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/21/Diary-0X2/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+          面试又又又又又挂了
+字节的面试官叫我手写一个阻塞队列，当场石化，硬着头皮写了一个线程安全的队列出来，很尴尬接着问了一下Java的基础，回答得不怎么好，然后再也没问什么了，Android一点没问
+看着小伙伴一个个都找到了实习，而我却在原地踏步，很难受。说好的只见森林不见树木不是很好，可偏偏就是在问森林
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/21/Diary-0X2/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1784,6 +1538,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1802,17 +1575,17 @@
       
         
           
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>昨天的金山笔试有一题通过Activity来遍历ViewTree，当场去世，就想着应该有一个View的入口来让我递归，现在才知道怎么做</p>
-<p>废话不说，来上代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getAllViews</span><span class="params">(Activity act)</span> </span>&#123;  </div><div class="line"><span class="comment">// 可以写个函数调用的嘛，当时真的是傻了</span></div><div class="line">      List&lt;View&gt; list = getAllChildViews(act.getWindow().getDecorView());  </div><div class="line">  &#125;  </div><div class="line">	</div><div class="line">  <span class="function"><span class="keyword">private</span> List&lt;View&gt; <span class="title">getAllChildViews</span><span class="params">(View view)</span> </span>&#123;  </div><div class="line">      List&lt;View&gt; allchildren = <span class="keyword">new</span> ArrayList&lt;View&gt;(); </div><div class="line">      <span class="keyword">if</span> (view <span class="keyword">instanceof</span> ViewGroup) &#123;  </div><div class="line"><span class="comment">// 判断是否此View是否为ViewGroup，也就是layout啦（不准确的说法）</span></div><div class="line">          ViewGroup vp = (ViewGroup) view;  </div><div class="line">	Log.d(<span class="string">"GroupView"</span>,vp.getClass().getName()); </div><div class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vp.getChildCount(); i++) &#123;  </div><div class="line">              View viewchild = vp.getChildAt(i); <span class="comment">// 取得子View </span></div><div class="line">              allchildren.add(viewchild); </div><div class="line">		<span class="keyword">if</span>(viewchild <span class="keyword">instanceof</span> ViewGroup)&#123;&#125; </div><div class="line">		<span class="keyword">else</span> &#123;</div><div class="line">					Log.d(<span class="string">"Child"</span>,viewchild.getClass().getName()); </div><div class="line">		&#125; </div><div class="line">              <span class="comment">//再次调用</span></div><div class="line">              allchildren.addAll(getAllChildViews(viewchild));  </div><div class="line">          &#125;  </div><div class="line">      &#125;  </div><div class="line">      <span class="keyword">return</span> allchildren;  </div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>金山的笔试还是比较基础的，Java和Android还有一些基础算法，还是很想去金山的QAQ</p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/06/Activity实现遍历ViewTree/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+          前言昨天的金山笔试有一题通过Activity来遍历ViewTree，当场去世，就想着应该有一个View的入口来让我递归，现在才知道怎么做
+废话不说，来上代码
+123456789101112131415161718192021222324  private void getAllViews(Activ
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/06/Activity实现遍历ViewTree/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1915,6 +1688,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -1933,60 +1725,18 @@
       
         
           
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>配合<a href="https://blog.csdn.net/xiang_freedom/article/details/54949307" target="_blank" rel="external">Andorid开发艺术探索笔记</a>食用更佳</p>
-<p>View的事件分发分一下四部分，每个部分对事件分发的处理是不一样的，从肉眼可见的顺序编写<br>首先上个源码</p>
-<p><img src="/img/emmm.jpg" alt="emmm"></p>
-<h2 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;</div><div class="line"></div><div class="line">    if (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</div><div class="line"></div><div class="line">        onUserInteraction();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (getWindow().superDispatchTouchEvent(ev)) &#123;</div><div class="line"></div><div class="line">        return true;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return onTouchEvent(ev);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先是交给附属的Window分发，如果返回了true，整个点击事件循环就结束（分发下去），否则交给Activity的onTouchEvent处理。</p>
-<h2 id="Window"><a href="#Window" class="headerlink" title="Window"></a>Window</h2><p>public abstract boolean superDispatchTouchEvent(MotionEvent event);</p>
-<p>是一个抽象方法，真正的实现在PhoneWindow</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public boolean superDispatchTouchEvent(MotionEvent event) &#123;</div><div class="line"></div><div class="line">    return mDecor.superDispatchTouchEvent(event);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>事件传给了DecoView，这个就是我们所说的顶级View（也叫ViewRoot），一般是一个ViewGroup</p>
-<p>在onCreate中的setContestView就是这个顶级View的一个子View</p>
-<h2 id="DecoView-顶级View"><a href="#DecoView-顶级View" class="headerlink" title="DecoView(顶级View)"></a>DecoView(顶级View)</h2><p>伪代码思想</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">funtion dispathTouchEvent(event):</div><div class="line"></div><div class="line">    if (mOnTouchListener) &#123;</div><div class="line">		onTouch(event) </div><div class="line">    &#125; else &#123;</div><div class="line">        if (onInterceptTouchEvent()) &#123;</div><div class="line">            onTouchEvent() - &gt; &#123;</div><div class="line">                if (mOnClickListener) &#123;  // 如果设置了点击监听</div><div class="line">                    onClick()</div><div class="line">                &#125;</div><div class="line">	&#125;  else &#123;</div><div class="line">		superDispathTouchEvent()  // 分发 </div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>源码，ViewGroup的拦截逻辑</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">// Check for interception.</div><div class="line"></div><div class="line">final boolean intercepted;</div><div class="line"></div><div class="line">if (actionMasked == MotionEvent.ACTION_DOWN</div><div class="line"></div><div class="line">        || mFirstTouchTarget != null) &#123; // 一旦子元素处理之后，ViewGroup的onInterceptTouchEvent不再处理</div><div class="line"></div><div class="line">    final boolean disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != 0;</div><div class="line"></div><div class="line">    if (!disallowIntercept) &#123;</div><div class="line"></div><div class="line">        intercepted = onInterceptTouchEvent(ev);</div><div class="line"></div><div class="line">        ev.setAction(action); // restore action in case it was changed</div><div class="line"></div><div class="line">    &#125; else &#123;</div><div class="line"></div><div class="line">        intercepted = false;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125; else &#123;</div><div class="line"></div><div class="line">    // There are no touch targets and this action is not an initial down</div><div class="line"></div><div class="line">    // so this view group continues to intercept touches.</div><div class="line"></div><div class="line">    intercepted = true;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>特别注意的是FLAG_DISALLOW_INTERCEPT这个标记位一旦设置后，ViewGroup无法拦截处理action_down之外的点击事件，</p>
-<p>在ViewGroup分发事件的时候action_down会重置这个标记位，所以ViewGroup总是会调用onInterceptTouchEvent来询问是否拦截事件</p>
-<p>ViewGroup不拦截的时候，源码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line">final View[] children = mChildren;</div><div class="line"></div><div class="line">for (int i = childrenCount - 1; i &gt;= 0; i--) &#123;</div><div class="line"></div><div class="line">    final int childIndex = getAndVerifyPreorderedIndex(    // 遍历子元素</div><div class="line"></div><div class="line">            childrenCount, i, customOrder);</div><div class="line"></div><div class="line">    final View child = getAndVerifyPreorderedView(</div><div class="line"></div><div class="line">            preorderedList, children, childIndex);</div><div class="line"></div><div class="line">    // If there is a view that has accessibility focus we want it</div><div class="line"></div><div class="line">    // to get the event first and if not handled we will perform a</div><div class="line"></div><div class="line">    // normal dispatch. We may do a double iteration but this is</div><div class="line"></div><div class="line">    // safer given the timeframe.</div><div class="line"></div><div class="line">    if (childWithAccessibilityFocus != null) &#123;     // 动画判断</div><div class="line"></div><div class="line">        if (childWithAccessibilityFocus != child) &#123;</div><div class="line"></div><div class="line">            continue;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        childWithAccessibilityFocus = null;</div><div class="line"></div><div class="line">        i = childrenCount - 1;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!canViewReceivePointerEvents(child)  //  区域判断</div><div class="line"></div><div class="line">            || !isTransformedTouchPointInView(x, y, child, null)) &#123;</div><div class="line"></div><div class="line">        ev.setTargetAccessibilityFocus(false);</div><div class="line"></div><div class="line">        continue;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    newTouchTarget = getTouchTarget(child);</div><div class="line"></div><div class="line">    if (newTouchTarget != null) &#123;</div><div class="line"></div><div class="line">        // Child is already receiving touch within its bounds.</div><div class="line"></div><div class="line">        // Give it the new pointer in addition to the ones it is handling.</div><div class="line"></div><div class="line">        newTouchTarget.pointerIdBits |= idBitsToAssign;</div><div class="line"></div><div class="line">        break;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    resetCancelNextUpFlag(child);</div><div class="line"></div><div class="line">    if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) &#123;</div><div class="line"></div><div class="line">        // Child wants to receive touch within its bounds.</div><div class="line"></div><div class="line">        mLastTouchDownTime = ev.getDownTime();</div><div class="line"></div><div class="line">        if (preorderedList != null) &#123;</div><div class="line"></div><div class="line">            // childIndex points into presorted list, find original index</div><div class="line"></div><div class="line">            for (int j = 0; j &lt; childrenCount; j++) &#123;</div><div class="line"></div><div class="line">                if (children[childIndex] == mChildren[j]) &#123;</div><div class="line"></div><div class="line">                    mLastTouchDownIndex = j;</div><div class="line"></div><div class="line">                    break;</div><div class="line"></div><div class="line">                &#125;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125; else &#123;</div><div class="line"></div><div class="line">            mLastTouchDownIndex = childIndex;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mLastTouchDownX = ev.getX();</div><div class="line"></div><div class="line">        mLastTouchDownY = ev.getY();</div><div class="line"></div><div class="line">        newTouchTarget = addTouchTarget(child, idBitsToAssign);</div><div class="line"></div><div class="line">        alreadyDispatchedToNewTouchTarget = true;</div><div class="line"></div><div class="line">        break;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>大致逻辑如下：</p>
-<p>遍历所有的子元素，判断子元素是否能够接收到点击事件，是否在动画化中和点击事件的坐标是否在子元素的区域内</p>
-<p>dispatchTransformedTouchEvent实际上就是调用子元素的dispatchTouchEvent方法</p>
-<p>上面的child传递的就不是null，所以事件就交给子元素处理了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if (child == null) &#123;</div><div class="line">    handled = super.dispatchTouchEvent(event);</div><div class="line">&#125; else &#123;</div><div class="line">    handled = child.dispatchTouchEvent(event);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果子元素的dispatchTouchEvent返回true，那么跳出遍历的for循环，mFirstTouchTarget也会被赋值，否则false会继续把事件分发给子元素</p>
-<p>addTouchTarget就已经完成了对mFirstTouchTarget的复制，那么ViewGroup就默认拦截同一序列的所有事件</p>
-<p>如果遍历的子元素事件没有被合适处理，有两种情况，没有子元素和子元素已经处理了事件，但是dispatchTouchEvent返回了false（子元素在onTouchEvent返回了false）</p>
-<p>这就会让ViewGroup自己处理点击事件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// Dispatch to touch targets.</div><div class="line"></div><div class="line">if (mFirstTouchTarget == null) &#123;</div><div class="line"></div><div class="line">    // No touch targets so treat this as an ordinary view.</div><div class="line"></div><div class="line">    handled = dispatchTransformedTouchEvent(ev, canceled, null,</div><div class="line"></div><div class="line">            TouchTarget.ALL_POINTER_IDS);</div></pre></td></tr></table></figure>
-<p>第三个child位null，那么通过前的源码就可以知道会调用super.dispatchTouchEvent(event)，这里就会到View的dispathcTouchEvent，事件也就交给了View去完成。</p>
-<h2 id="View对点击事件的处理"><a href="#View对点击事件的处理" class="headerlink" title="View对点击事件的处理"></a>View对点击事件的处理</h2><p>源码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public boolean dispatchTouchEvent(MotionEvent event) &#123;</div><div class="line"></div><div class="line">    // If the event should be handled by accessibility focus first.</div><div class="line"></div><div class="line">    if (event.isTargetAccessibilityFocus()) &#123;</div><div class="line"></div><div class="line">        // We don&apos;t have focus or no virtual descendant has it, do not handle the event.</div><div class="line"></div><div class="line">        if (!isAccessibilityFocusedViewOrHost()) &#123;</div><div class="line"></div><div class="line">            return false;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // We have focus and got the event, then use normal event dispatch.</div><div class="line"></div><div class="line">        event.setTargetAccessibilityFocus(false);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    boolean result = false;</div><div class="line"></div><div class="line">    if (mInputEventConsistencyVerifier != null) &#123;</div><div class="line"></div><div class="line">        mInputEventConsistencyVerifier.onTouchEvent(event, 0);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    final int actionMasked = event.getActionMasked();</div><div class="line"></div><div class="line">    if (actionMasked == MotionEvent.ACTION_DOWN) &#123;</div><div class="line"></div><div class="line">        // Defensive cleanup for new gesture</div><div class="line"></div><div class="line">        stopNestedScroll();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (onFilterTouchEventForSecurity(event)) &#123;</div><div class="line"></div><div class="line">        if ((mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp; handleScrollBarDragging(event)) &#123;</div><div class="line"></div><div class="line">            result = true;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //noinspection SimplifiableIfStatement</div><div class="line"></div><div class="line">        ListenerInfo li = mListenerInfo;</div><div class="line"></div><div class="line">        if (li != null &amp;&amp; li.mOnTouchListener != null   // 处理点击事件</div><div class="line"></div><div class="line">                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED</div><div class="line"></div><div class="line">                &amp;&amp; li.mOnTouchListener.onTouch(this, event)) &#123;</div><div class="line"></div><div class="line">            result = true;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (!result &amp;&amp; onTouchEvent(event)) &#123;</div><div class="line"></div><div class="line">            result = true;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!result &amp;&amp; mInputEventConsistencyVerifier != null) &#123;</div><div class="line"></div><div class="line">        mInputEventConsistencyVerifier.onUnhandledEvent(event, 0);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Clean up after nested scrolls if this is the end of a gesture;</div><div class="line"></div><div class="line">    // also cancel it if we tried an ACTION_DOWN but we didn&apos;t want the rest</div><div class="line"></div><div class="line">    // of the gesture.</div><div class="line"></div><div class="line">    if (actionMasked == MotionEvent.ACTION_UP ||</div><div class="line"></div><div class="line">            actionMasked == MotionEvent.ACTION_CANCEL ||</div><div class="line"></div><div class="line">            (actionMasked == MotionEvent.ACTION_DOWN &amp;&amp; !result)) &#123;</div><div class="line"></div><div class="line">        stopNestedScroll();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return result;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>有点长，但是单看处理点击事件的只有一点，View无法去分发事件，到头了，只能自己去处理事件。</p>
-<p>首先，判断是否设置了OnTouchListener，如果Listener的onTouch方法返回true，那么onTouchEvent就不会被调用</p>
-<p>证明了Listener的优先级是高于onTouchEvent的，外界处理事件</p>
-<p>onTouchEvent部分源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">if ((viewFlags &amp; ENABLED_MASK) == DISABLED) &#123;</div><div class="line"></div><div class="line">    if (action == MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) != 0) &#123;</div><div class="line"></div><div class="line">        setPressed(false);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // A disabled view that is clickable still consumes the touch</div><div class="line"></div><div class="line">    // events, it just doesn&apos;t respond to them.</div><div class="line"></div><div class="line">    return (((viewFlags &amp; CLICKABLE) == CLICKABLE</div><div class="line"></div><div class="line">            || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)</div><div class="line"></div><div class="line">            || (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果view不可用，照样也会消耗点击事件（源码都tm解释给你听了）</p>
-<p>假如view有代理，还会执行TouchDelegate的onTouchEvent</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">if (mTouchDelegate != null) &#123;</div><div class="line"></div><div class="line">    if (mTouchDelegate.onTouchEvent(event)) &#123;</div><div class="line"></div><div class="line">        return true;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>具体的点击处理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||</div><div class="line"></div><div class="line">        (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) ||</div><div class="line"></div><div class="line">        (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE) &#123;</div><div class="line"></div><div class="line">    switch (action) &#123;</div><div class="line"></div><div class="line">        case MotionEvent.ACTION_UP:</div><div class="line"></div><div class="line">            boolean prepressed = (mPrivateFlags &amp; PFLAG_PREPRESSED) != 0;</div><div class="line"></div><div class="line">            if ((mPrivateFlags &amp; PFLAG_PRESSED) != 0 || prepressed) &#123;</div><div class="line"></div><div class="line">                // take focus if we don&apos;t have it already and we should in</div><div class="line"></div><div class="line">                // touch mode.</div><div class="line"></div><div class="line">                boolean focusTaken = false;</div><div class="line"></div><div class="line">                if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) &#123;</div><div class="line"></div><div class="line">                    focusTaken = requestFocus();</div><div class="line"></div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (prepressed) &#123;</div><div class="line"></div><div class="line">                    // The button is being released before we actually</div><div class="line"></div><div class="line">                    // showed it as pressed.  Make it show the pressed</div><div class="line"></div><div class="line">                    // state now (before scheduling the click) to ensure</div><div class="line"></div><div class="line">                    // the user sees it.</div><div class="line"></div><div class="line">                    setPressed(true, x, y);</div><div class="line"></div><div class="line">               &#125;</div><div class="line"></div><div class="line">                if (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) &#123;</div><div class="line"></div><div class="line">                    // This is a tap, so remove the longpress check</div><div class="line"></div><div class="line">                    removeLongPressCallback();</div><div class="line"></div><div class="line">                    // Only perform take click actions if we were in the pressed state</div><div class="line"></div><div class="line">                    if (!focusTaken) &#123;</div><div class="line"></div><div class="line">                        // Use a Runnable and post this rather than calling</div><div class="line"></div><div class="line">                        // performClick directly. This lets other visual state</div><div class="line"></div><div class="line">                        // of the view update before click actions start.</div><div class="line"></div><div class="line">                        if (mPerformClick == null) &#123;</div><div class="line"></div><div class="line">                            mPerformClick = new PerformClick();</div><div class="line"></div><div class="line">                        &#125;</div><div class="line"></div><div class="line">                        if (!post(mPerformClick)) &#123;</div><div class="line"></div><div class="line">                            performClick();</div><div class="line"></div><div class="line">                        &#125;</div><div class="line"></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                &#125;</div></pre></td></tr></table></figure>
-<p>可以看出只要CLIKABLE和LONG_CLICKABLE有一个是true，他就会消耗事件，onTouchEvent返回true，不管Disable庄涛，然后就是action_up发生出发performClick，</p>
-<p>设置Listener之后就会调用onClick方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public boolean performClick() &#123;</div><div class="line"></div><div class="line">    final boolean result;</div><div class="line"></div><div class="line">    final ListenerInfo li = mListenerInfo;</div><div class="line"></div><div class="line">    if (li != null &amp;&amp; li.mOnClickListener != null) &#123;</div><div class="line"></div><div class="line">        playSoundEffect(SoundEffectConstants.CLICK);</div><div class="line"></div><div class="line">        li.mOnClickListener.onClick(this);</div><div class="line"></div><div class="line">        result = true;</div><div class="line"></div><div class="line">    &#125; else &#123;</div><div class="line"></div><div class="line">        result = false;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);</div><div class="line"></div><div class="line">    return result;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中View的Long Click默认false，ClickAble是由View自己决定的，我们也可自行改变这两个的属性，</p>
-<p>分发机制已经梳理得很清晰了。</p>
-<h2 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h2><p>每次进步一点，积累就会成长不少。一开始我对View是拒绝的，很长很复杂，但是通过自己慢慢厘清源码，配合网上或者书上的一些详解就可以啃下这个骨头。</p>
+          前言配合Andorid开发艺术探索笔记食用更佳
+View的事件分发分一下四部分，每个部分对事件分发的处理是不一样的，从肉眼可见的顺序编写首先上个源码
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/02/初探View之事件分发机制/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+Activity123456789101112131415161718public boolean dispatchTouchEvent(Motio
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/02/初探View之事件分发机制/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2089,6 +1839,25 @@
           
 
           
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字數統計&#58;</span>
+                
+                <span title="字數統計">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
 
           
 
@@ -2107,68 +1876,26 @@
       
         
           
-            <h1 id="初识内存屏障"><a href="#初识内存屏障" class="headerlink" title="初识内存屏障"></a>初识内存屏障</h1><p>内存屏障的概念来自硬件层，硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即读屏障和写屏障。</p>
-<ul>
-<li>内存屏障有两个作用：</li>
-</ul>
-<blockquote>
-<ol>
-<li>阻止屏障两侧的指令重排序；</li>
-<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</li>
-</ol>
-</blockquote>
-<ul>
-<li><p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；</p>
-</li>
-<li><p>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-</li>
-</ul>
-<p>我们把Load就是我们内存操作上的读，Store就是写</p>
-<p>Java的内存屏障有四种，实际上就是读和写的组合，来完成一系列的屏障和数据同步功能</p>
-<p>读-读屏障：</p>
-<pre><code>Load1;
-LoadLoad;
-Load2;
-</code></pre><p>保证Load1要在Load2及以后的操作之前先完成读取的操作</p>
-<p>写-写屏障：</p>
-<pre><code>Store1;
-StoreStore;
-Store2;
-</code></pre><p>保证Store1的写操作要在Store2及以后之前对其他处理器可见（线程）</p>
-<p>读-写屏障：</p>
-<pre><code>Load1;
-LoadStore;
-Store2;
-</code></pre><p>保证Load1要在Store2及以后之前先完成读取的操作-</p>
-<p>写-读屏障：</p>
-<pre><code>Store1;
-StoreLoad;
-Load2;
-</code></pre><p>保证Store1的写操作要在Load2及以后之前要对其他处理器可见（线程）</p>
-<h1 id="衍生知识"><a href="#衍生知识" class="headerlink" title="衍生知识"></a>衍生知识</h1><ol>
-<li><p>Volatile的内存屏障策略</p>
-<p> 特点：严格保守，悲观</p>
-<p> 在每个volatile写操作前插入写-写屏障，在写操作后插入写-读屏障；</p>
-<p> 在每个volatile读操作前插入读-读屏障，在读操作后插入读-写屏障；</p>
-<p> 有效防止Volatile变量及其后续指令的重排序、线程之间实现安全的通信，正式因为这样，被Volatile修饰过的变量便显现出了锁的特性</p>
-</li>
-<li><p>Final的内存屏障</p>
-<p> 在新建对象过程中，后遭提对final的初始化写入和这个对赋值给其他引用变量不能重排序</p>
-<p> final域对象的赋值引用和调用final值不能重排序</p>
-<p> 必须保证final域写入后才能引用和读取</p>
-<p> 写final域之前会插入写-写屏障保障final域的可见而且防止重排序</p>
-<p> 读final域就是之前插入读-读屏障实现防止重排序</p>
-<p> x86处理器会对读-读、写-写忽略</p>
-</li>
-</ol>
-<h1 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h1><p>Java的并发与内存屏障息息相关，内存屏障保障了并发的线程安全问题，弄懂底层实现能更好去理解Java的并发思想，所以才有了这篇文章，如有错漏，还望批评指导</p>
+          初识内存屏障内存屏障的概念来自硬件层，硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即读屏障和写屏障。
 
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/05/26/初识内存屏障/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          
+内存屏障有两个作用：
+
+
+
+阻止屏障两侧的指令重排序；
+强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。
+
+
+
+对于Load Barr
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/26/初识内存屏障/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
