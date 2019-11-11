@@ -121,39 +121,39 @@
 <meta property="og:site_name" content="Airy's Blog">
 <meta property="og:description" content="RxJava2源码分析RxJava是什么RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。
 基本首先我们建立一个常见的Observable，用lamdba快速创建了一些数据现在层层剥离，可以看到emit">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-1.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-2.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-3.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-4.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-5.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-6.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-7.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-8.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-9.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-10.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-11.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-12.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-13.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-14.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-15.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-16.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-17.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-18.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-19.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-20.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-21.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-22.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-23.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-24.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-25.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-26.png">
-<meta property="og:image" content="https://airymiku.github.io/img/RxJava/rxjava-27.png">
-<meta property="og:updated_time" content="2018-08-17T17:36:57.000Z">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-1.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-2.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-3.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-4.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-5.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-6.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-7.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-8.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-9.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-10.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-11.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-12.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-13.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-14.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-15.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-16.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-17.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-18.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-19.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-20.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-21.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-22.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-23.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-24.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-25.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-26.png">
+<meta property="og:image" content="https://airymiku.github.io/images/RxJava/rxjava-27.png">
+<meta property="og:updated_time" content="2019-11-11T07:40:58.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava简单分析">
 <meta name="twitter:description" content="RxJava2源码分析RxJava是什么RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。
 基本首先我们建立一个常见的Observable，用lamdba快速创建了一些数据现在层层剥离，可以看到emit">
-<meta name="twitter:image" content="https://airymiku.github.io/img/RxJava/rxjava-1.png">
+<meta name="twitter:image" content="https://airymiku.github.io/images/RxJava/rxjava-1.png">
 
 
 
@@ -333,7 +333,7 @@
   
 </nav>
 
-<div class="site-brand-wrapper" style="background-image: url(/img/sidebar_header.png)">
+<div class="site-brand-wrapper" style="background-image: url(/images/sidebar_header.png)">
   <div class="site-meta ">
     
 
@@ -365,7 +365,7 @@
   </div>
 </div>
 <div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-master-avatar" itemprop="image" src="/img/avatar.png" alt="AiryMiku" />
+    <img class="site-master-avatar" itemprop="image" src="/images/avatar.png" alt="AiryMiku" />
     <h2 class="site-master-description" itemprop="description">
         Android is the best~
     </h2>
@@ -406,7 +406,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="AiryMiku">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/img/avatar.png">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -498,24 +498,24 @@
 
       
         <h1 id="RxJava2源码分析"><a href="#RxJava2源码分析" class="headerlink" title="RxJava2源码分析"></a>RxJava2源码分析</h1><h2 id="RxJava是什么"><a href="#RxJava是什么" class="headerlink" title="RxJava是什么"></a>RxJava是什么</h2><p>RxJava是一个非常流行的基于观察者模式的响应式编程框架，在Android开发等领域有很广泛的应用。作为Java开发者，我们有必要了解一下RxJava的实现原理，掌握RxJava的设计思想，这样我们才能更加熟练的使用RxJava来编写优秀的代码。</p>
-<h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/img/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/img/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/img/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/img/RxJava/rxjava-4.png" alt=""></p>
-<p>可以看到最终创建的是一个ObserveCreate对象，顺便会判空，判空代码很简单就是判null抛NullPointException<br><img src="/img/RxJava/rxjava-5.png" alt=""></p>
-<p>ObservableCreate继承了Observable接口，内部持有onSubscribe对象也就是我们的上游数据source<br><img src="/img/RxJava/rxjava-6.png" alt=""></p>
-<p>onAssembly是不是很熟悉，拿出你们的iPhone，后背就写着Assembled in China,这里就是对我们的数据源进行组装了（上面其实也组装了特别多），这里有个全局回调函数，全局搜索apply()还不止一个，暂时放一放<br><img src="/img/RxJava/rxjava-7.png" alt=""></p>
-<p>那么到这里数据已经包装好了，下面是下游（观察者）的精彩操作<br><img src="/img/RxJava/rxjava-8.png" alt=""><br><img src="/img/RxJava/rxjava-9.png" alt=""></p>
-<p>调用onSubscribe开始订阅上游数据，可以看到同样有全局回调函数，和上面一样默认空<br><img src="/img/RxJava/rxjava-10.png" alt=""><br>上上双重判空略过，我们只关心整个的逻辑，subscribeActual才是我们需要关注的，observer又被包装成CreateEmitter准备发射<br><img src="/img/RxJava/rxjava-11.png" alt=""><br>这里的onSubscribe就是我们自己写的回调<br><img src="/img/RxJava/rxjava-12.png" alt=""><br>进入subscribe，我们又回来啦，这里直接调用之前的emitter发送数据<br><img src="/img/RxJava/rxjava-13.png" alt=""></p>
-<p>回调下游的onNext，其中isDisposed判断是否要切断数据流<br><img src="/img/RxJava/rxjava-14.png" alt=""></p>
-<p>我们上游是有一个onComplete表示切断数据，现在调用了，可以看到他也会判断是否切断，成功回调后，最终也会到dispose这个方法切断数据流<br><img src="/img/RxJava/rxjava-15.png" alt=""></p>
-<p>直接把自己传进去，可以看到这个是由DisposableHelper来真正操作的，前面的判断也是如此<br><img src="/img/RxJava/rxjava-16.png" alt=""></p>
-<p>判断是否已经处理完，这个函数决定是否回调observable的onXX，否则当调用onComplete时表示切断水管且不再回调onXX，还可以看到这里是一个原子引用，保证并发的安全（666）<br><img src="/img/RxJava/rxjava-17.png" alt=""><br>complete后面接着一个next，但是此时我们已经切断了数据，所以虽然接收到但是我们也只得抛弃掉<br><img src="/img/RxJava/rxjava-18.png" alt=""></p>
+<h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><p>首先我们建立一个常见的Observable，用lamdba快速创建了一些数据<br><img src="/images/RxJava/rxjava-1.png" alt=""><br>现在层层剥离，可以看到emitter就是定义的数据操作<br><img src="/images/RxJava/rxjava-2.png" alt=""><br>ObserveableEmitter继承了Emitter<br><img src="/images/RxJava/rxjava-3.png" alt=""><br>最后我们的数据又包装成ObservableOnSubscribe<br><img src="/images/RxJava/rxjava-4.png" alt=""></p>
+<p>可以看到最终创建的是一个ObserveCreate对象，顺便会判空，判空代码很简单就是判null抛NullPointException<br><img src="/images/RxJava/rxjava-5.png" alt=""></p>
+<p>ObservableCreate继承了Observable接口，内部持有onSubscribe对象也就是我们的上游数据source<br><img src="/images/RxJava/rxjava-6.png" alt=""></p>
+<p>onAssembly是不是很熟悉，拿出你们的iPhone，后背就写着Assembled in China,这里就是对我们的数据源进行组装了（上面其实也组装了特别多），这里有个全局回调函数，全局搜索apply()还不止一个，暂时放一放<br><img src="/images/RxJava/rxjava-7.png" alt=""></p>
+<p>那么到这里数据已经包装好了，下面是下游（观察者）的精彩操作<br><img src="/images/RxJava/rxjava-8.png" alt=""><br><img src="/images/RxJava/rxjava-9.png" alt=""></p>
+<p>调用onSubscribe开始订阅上游数据，可以看到同样有全局回调函数，和上面一样默认空<br><img src="/images/RxJava/rxjava-10.png" alt=""><br>上上双重判空略过，我们只关心整个的逻辑，subscribeActual才是我们需要关注的，observer又被包装成CreateEmitter准备发射<br><img src="/images/RxJava/rxjava-11.png" alt=""><br>这里的onSubscribe就是我们自己写的回调<br><img src="/images/RxJava/rxjava-12.png" alt=""><br>进入subscribe，我们又回来啦，这里直接调用之前的emitter发送数据<br><img src="/images/RxJava/rxjava-13.png" alt=""></p>
+<p>回调下游的onNext，其中isDisposed判断是否要切断数据流<br><img src="/images/RxJava/rxjava-14.png" alt=""></p>
+<p>我们上游是有一个onComplete表示切断数据，现在调用了，可以看到他也会判断是否切断，成功回调后，最终也会到dispose这个方法切断数据流<br><img src="/images/RxJava/rxjava-15.png" alt=""></p>
+<p>直接把自己传进去，可以看到这个是由DisposableHelper来真正操作的，前面的判断也是如此<br><img src="/images/RxJava/rxjava-16.png" alt=""></p>
+<p>判断是否已经处理完，这个函数决定是否回调observable的onXX，否则当调用onComplete时表示切断水管且不再回调onXX，还可以看到这里是一个原子引用，保证并发的安全（666）<br><img src="/images/RxJava/rxjava-17.png" alt=""><br>complete后面接着一个next，但是此时我们已经切断了数据，所以虽然接收到但是我们也只得抛弃掉<br><img src="/images/RxJava/rxjava-18.png" alt=""></p>
 <p>这就完成了一个发射数据-&gt; 接收数据的流程</p>
-<h2 id="线程切换"><a href="#线程切换" class="headerlink" title="线程切换"></a>线程切换</h2><p>无独有偶，线程也只是变成scheduler包装起来还是那个Observable只不过变成SubscribeOn了<br><img src="/img/RxJava/rxjava-19.png" alt=""></p>
-<p>有了上面的经验我们直接看subcribeActual的里一个重载函数<br><img src="/img/RxJava/rxjava-20.png" alt=""></p>
-<p>可以看到scheduler里面真正要跑的是worker<br><img src="/img/RxJava/rxjava-21.png" alt=""><br>把我们的任务包装成disposetask，这是一个runnable<br><img src="/img/RxJava/rxjava-22.png" alt=""><br><img src="/img/RxJava/rxjava-23.png" alt=""><br>用了线程池来启动任务</p>
-<p><img src="/img/RxJava/rxjava-24.png" alt=""><br>进行线程切换如Schedules.io()会用到concurrent并发包的线程池，这里把线程服务放入线程池</p>
-<p>最终来到scheduleActual，这里有一系列的操作线程池运行我们的任务，还会包装成future<br><img src="/img/RxJava/rxjava-25.png" alt=""></p>
-<p>可以看到这时的dispose操作伴随着线程池的shutdown<br><img src="/img/RxJava/rxjava-26.png" alt=""></p>
-<p>线程经过包装，默认优先级是5，设置成守护进程<br><img src="/img/RxJava/rxjava-27.png" alt=""></p>
+<h2 id="线程切换"><a href="#线程切换" class="headerlink" title="线程切换"></a>线程切换</h2><p>无独有偶，线程也只是变成scheduler包装起来还是那个Observable只不过变成SubscribeOn了<br><img src="/images/RxJava/rxjava-19.png" alt=""></p>
+<p>有了上面的经验我们直接看subcribeActual的里一个重载函数<br><img src="/images/RxJava/rxjava-20.png" alt=""></p>
+<p>可以看到scheduler里面真正要跑的是worker<br><img src="/images/RxJava/rxjava-21.png" alt=""><br>把我们的任务包装成disposetask，这是一个runnable<br><img src="/images/RxJava/rxjava-22.png" alt=""><br><img src="/images/RxJava/rxjava-23.png" alt=""><br>用了线程池来启动任务</p>
+<p><img src="/images/RxJava/rxjava-24.png" alt=""><br>进行线程切换如Schedules.io()会用到concurrent并发包的线程池，这里把线程服务放入线程池</p>
+<p>最终来到scheduleActual，这里有一系列的操作线程池运行我们的任务，还会包装成future<br><img src="/images/RxJava/rxjava-25.png" alt=""></p>
+<p>可以看到这时的dispose操作伴随着线程池的shutdown<br><img src="/images/RxJava/rxjava-26.png" alt=""></p>
+<p>线程经过包装，默认优先级是5，设置成守护进程<br><img src="/images/RxJava/rxjava-27.png" alt=""></p>
 <p>worker &lt;- task &lt;- thread 就是大致的一个流程</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>RxJava的核心思想简单理解就差不多了，剩下的应该就很容易去分析了</p>
 
@@ -542,14 +542,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/img/avatar.png" alt="AiryMiku 微信支付"/>
+        <img id="wechat_qr" src="/images/avatar.png" alt="AiryMiku 微信支付"/>
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/img/avatar.png" alt="AiryMiku 支付寶"/>
+        <img id="alipay_qr" src="/images/avatar.png" alt="AiryMiku 支付寶"/>
         <p>支付寶</p>
       </div>
     
@@ -715,7 +715,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/img/avatar.png"
+                src="/images/avatar.png"
                 alt="AiryMiku" />
             
               <p class="site-author-name" itemprop="name"><span style="opacity:.2;">Airy</span></p>
